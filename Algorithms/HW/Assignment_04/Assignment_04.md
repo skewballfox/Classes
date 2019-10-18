@@ -74,6 +74,52 @@ def make_change(coins,coins_checked,change):
 
 given sequencens $X=[x_1,...,x_i]$ and $Y=[y_1,...,y_j]$, and C the length of longest common substring of both
 
-proof by contradiction
+proof by induction
+m=length of X
+n=length of Y
+i=iterator of X
+j=iterator of Y
+base case: 
+i or j =0
 
-suppose the length is greater than the length of the longest common substring to both X[i
+then C[i,j]=0
+
+Consider some C[i,j] and assume that the claim holds for all the previous iterations of i and j
+where i'+j'<i+j
+
+if $X_i==Y_j$, then 
+  
+  C[i,j]=C[i-1,j-1]+1
+
+else
+ 
+ if c[i-1,j] is greater than or equal to c[i,j-1], then
+    
+    c[i,j] is equal to c[i-1,j]
+ 
+ else
+    
+    c[i,j] is equal to c[i,j-1]
+
+thus is holds for some i, j 
+
+now consider C[i+1,j+1] 
+
+if $X_{i+1}==Y_{j+1}, then 
+  
+  C[i+1,j+1]=C[i,j]+1
+
+else
+  
+  if c[i,j+1] is greater than or equal to c[i+1,j], then
+    
+    c[i+1,j+1] is equal to c[i,j+1]
+  
+  else
+    
+    c[i+1,j+1] is eqal to c[i+1,j]
+
+thus the algorithm holds for all iterations of i,j to the length of the shortest sequence of X and Y
+
+### B
+
