@@ -113,7 +113,6 @@ d. Using the minimax algorithm, mark on your tree the backed-up values for the p
 e. Circle the nodes at depth 2 that would not be evaluated if alpha–beta pruning were applied, assuming the nodes are generated in the optimal order for alpha–beta pruning.
 
 5.16
-5.16
 This question considers pruning in games with chance nodes. Figure 5.19 shows the complete game tree for a trivial game. Assume that the leaf nodes are to be evaluated in left-to-right order, and that before a leaf node is evaluated, we know nothing about its value—the range of possible values is −∞ to ∞.
 
 a. Copy the figure, mark the value of all the internal nodes, and indicate the best move at the root with an arrow.
