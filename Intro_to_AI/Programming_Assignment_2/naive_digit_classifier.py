@@ -1,21 +1,71 @@
 import numpy as np
-from string import whitespace
+from string import whitespace   
 
-def get_images(data_file,label_file):
-    images=[]
-    image_count=0
-    if data_file=='digitdata/trainingimages':
-        image_count=5000
-    elif data_file=='digitdata/testimages':
-        image_count=1000
-    with open(data_file,'r') as data: 
-        with open(label_file,'r') as labels:
+
+class digit_class():
+    def __init__(self,type='training',training_data_count=5000):
+        #self.images=[]
+        self.pixel_counts=np.zeros([28,28,3])
+        self.training_data_count=5000
+    def get_image(self, training_data):
+        
+        #image=np.zeros([28,28])
+        for i in range(28):
+            raw_data=training_data.readline()
+            for j in range(len(raw_data)):
+                if raw_data[j]!='\n':
+                    self.pixel_counts[i,j,2]+=1
+                    if raw_data[j]!=' ':
+                        #image[i,j]=1
+                        self.pixel_counts[i,j,1]+=1
+                    else:
+                        #image[i,j]=0
+                        self.pixel_counts[i,j,0]+=1
+        #self.images.append(image)
+    
+    def set_likely_image(self):
+        self.likely_image=np.array([28,28,2])
+        for i in range(28):
+            for j in range(28):
+                    for p in range(2):
+                        #NOTE:
+                        #Additive smoothing is a type of shrinkage estimator, 
+                        # as the resulting estimate will be between the empirical 
+                        # estimate xi / N, and the uniform probability 1/d
+                        # I'm going to ballpark it and use the priors as k
+                        self.Laplace=self.pixel_counts[i,j,p]+self.empirical_frequency
+                        self.smoothing=self.training_data_count+self.empirical_frequency*2
+                        self.likely_image[i,j,p]=Laplace/smoothing
+    
+    def set_empirical_frequency(self):
+        self.set_empirical_frequency=self.pixel_counts[28,28,2]/self.training_data_count
+    
+    def finish_training(self):
+        self.set_empirical_frequency()
+        self.set_likely_image()
+        
+                       
+def train_model(training_data,training_labels):
+    
+    digits=[digit_class('training') for digit in range(10)]
+    with open(training_data,'r') as data: 
+        with open(training_labels,'r') as labels:
             for k in range(image_count):
-            
-                images.append((get_label(labels),get_image(data)))
-    return images    
+                label=get_label(labels)
+                digits[label].get_image(data)
+                
+    return digits    
 
-def get_image(data_file):
+def test_model(test_data,test_labels,digits):
+    image_count=1000
+    with open(test_data,'r') as data: 
+        with open(test_labels,'r') as labels:
+            for k in range(image_count):
+                label=get_label(labels)
+                
+
+
+def get_image(data_file,pixel_counts):
     """get_image(data_file)
     grabs a single image from the ascii data file
     
@@ -28,11 +78,14 @@ def get_image(data_file):
     for i in range(28):
         raw_data=data_file.readline()
         for j in range(len(raw_data)):
+            pixel_counts[i,j,2]+=1
             if raw_data[j]!='\n':
                 if raw_data[j]!=' ':
                     image[i,j]=1
+                    pixel_counts[i,j,1]+=1
                 else:
                     image[i,j]=0
+                    pixel_counts[i,j,1]+=1
     print_image(image)
     return image
         
@@ -59,7 +112,8 @@ def get_label(label_file):
     value=int(raw_data)
     print(value)
     return value
-
+            
 
 if __name__=="__main__":
-    get_images('digitdata/trainingimages','digitdata/traininglabels')
+    digits=train_model('digitdata/trainingimages','digitdata/traininglabels')
+    
