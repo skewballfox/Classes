@@ -1,21 +1,25 @@
-import numpy as np   
-import math
+import numpy as np
+from string import whitespace   
+
 
 class digit_class():
     def __init__(self,identifier,training_data_count=5000):
         #self.images=[]
         self.name=identifier
-        self.pixel_counts=np.zeros([28,28,2])
-        self.image_count=0
+        self.pixel_counts=np.zeros([28,28,3])
+        self.feature_count=728 #28*28
+        self.test_pixel_counter=0
         self.posterior_probability=0
+        self.training_data_count=5000
     
     def get_image(self, training_data):
         
-        self.image_count+=1
+        #image=np.zeros([28,28])
         for i in range(28):
             raw_data=training_data.readline()
             for j in range(len(raw_data)):
                 if raw_data[j]!='\n':
+                    self.pixel_counts[i,j,2]+=1
                     if raw_data[j]!=' ':
                         #image[i,j]=1
                         self.pixel_counts[i,j,1]+=1
@@ -25,7 +29,7 @@ class digit_class():
         #self.images.append(image)
     
     def set_likely_image(self):
-        self.likely_image=np.zeros([28,28,2])
+        self.likely_image=np.array([28,28,2])
         for i in range(28):
             for j in range(28):
                     for p in range(2):
@@ -34,72 +38,83 @@ class digit_class():
                         # as the resulting estimate will be between the empirical 
                         # estimate xi / N, and the uniform probability 1/d
                         # I'm going to ballpark it and use the priors as k
-                        laplace = self.pixel_counts[i,j,p] + self.empirical_frequency
-                        smoothing = self.training_data_count + self.empirical_frequency*2
-                        self.likely_image[i,j,p] = laplace / smoothing
+                        self.Laplace=self.pixel_counts[i,j,p]+self.empirical_frequency
+                        self.smoothing=self.training_data_count+self.empirical_frequency*2
+                        self.likely_image[i,j,p]=Laplace/smoothing
     
-    def set_empirical_frequency(self,sample_size):
-        self.empirical_frequency=self.image_count/sample_size
-    def finish_training(self,sample_size):
-        self.set_empirical_frequency(sample_size)
-        self.posterior_probability=math.log(self.empirical_frequency)
+    def set_empirical_frequency(self):
+        self.empirical_frequency=self.pixel_counts[28,28,2]/self.training_data_count
+    
+    def finish_training(self):
+        self.set_empirical_frequency()
+        self.posterior_probability=log(self.empirical_frequency)
         self.set_likely_image()
 
-    def update_map(self,i,j,pixel):
+    def update_map(i,j,pixel):
         """
         NOTE the log of class has already been added to the posterior probability at the end
         of the finish training function 
         """
-        self.posterior_probability+=math.log(self.likely_image[i,j,pixel])        
+        self.posterior_probability+=log(self.likely_image([i,j,pixel]))        
 
-    def get_posterior_probability(self):
+    def get_posterior_probability():
         return self.posterior_probability
     
 def train_model(training_data,training_labels):
+    
     digits=[digit_class(digit) for digit in range(10)]
     with open(training_data,'r') as data: 
         with open(training_labels,'r') as labels:
-            for k in range(5000):
+            for k in range(image_count):
                 label=get_label(labels)
                 digits[label].get_image(data)
-    for digit in digits:
-        #let each digit class know that no more data will be added
-        digit.finish_training(5000)
+                
     return digits    
 
 def test_model(test_data,test_labels,digits):
     image_count=1000
-    correct_count=0
     with open(test_data,'r') as data: 
         with open(test_labels,'r') as labels:
             for k in range(image_count):
                 label=get_label(labels)
-                guess=map_classification(data,digits)
-                if guess==label:
-                    print("woop")
-                    correct_count+=1
-    print("got  {} out of {} correct".format(correct_count, image_count))
+                
 
 
-
-
-def map_classification(test_file,digits):
+    
+def get_image(data_file,pixel_counts):
+    """get_image(data_file)
+    grabs a single image from the ascii data file
+    
+    Parameters
+    ----------
+        data_file: expects a txt file containing 28*28 ascii images
+        ! stops iter at start of next 28 line block.
     """
-
-    """
+    image=np.zeros([28,28])
     for i in range(28):
-        raw_data=test_file.readline()
-        for j in range(28):
-            if raw_data[j]!=' ':
-                pixel=1
-            else:
-                pixel=0
+        raw_data=data_file.readline()
+        for j in range(len(raw_data)):
+            pixel_counts[i,j,2]+=1
+            if raw_data[j]!='\n':
+                if raw_data[j]!=' ':
+                    image[i,j]=1
+                    pixel_counts[i,j,1]+=1
+                else:
+                    image[i,j]=0
+                    pixel_counts[i,j,1]+=1
+    print_image(image)
+    return image
+
+def map_classification(digits,image):
+    """
+
+    """
+    for i in range(len(image)):
+        for j in range(len(image[i])):
+            pixel=image[i,j]
             for digit in digits:
                 digit.update_map(i,j,pixel)
-    #for digit in digits:
-
-
-    return np.argmax([x.get_posterior_probability() for x in digits])
+    return max(P for p in [x].get_posterior_probability() for x in digits)
 
 def print_image(image):
     """
@@ -121,9 +136,10 @@ def get_label(label_file):
     """
     raw_data=label_file.readline()
     value=int(raw_data)
+    print(value)
     return value
             
 
 if __name__=="__main__":
     digits=train_model('digitdata/trainingimages','digitdata/traininglabels')
-    test_model('digitdata/testimages','digitdata/traininglabels',digits)
+    

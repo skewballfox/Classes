@@ -6,8 +6,10 @@ class digit_class():
         #self.images=[]
         self.name=identifier
         self.pixel_counts=np.zeros([28,28,2])
+        self.feature_count=728 #28*28
         self.image_count=0
         self.posterior_probability=0
+        self.training_data_count=5000
     
     def get_image(self, training_data):
         
@@ -25,7 +27,7 @@ class digit_class():
         #self.images.append(image)
     
     def set_likely_image(self):
-        self.likely_image=np.zeros([28,28,2])
+        self.likely_image=np.array([28,28,2])
         for i in range(28):
             for j in range(28):
                     for p in range(2):
@@ -50,9 +52,9 @@ class digit_class():
         NOTE the log of class has already been added to the posterior probability at the end
         of the finish training function 
         """
-        self.posterior_probability+=math.log(self.likely_image[i,j,pixel])        
+        self.posterior_probability+=math.log(self.likely_image([i,j,pixel]))        
 
-    def get_posterior_probability(self):
+    def get_posterior_probability():
         return self.posterior_probability
     
 def train_model(training_data,training_labels):
@@ -97,9 +99,9 @@ def map_classification(test_file,digits):
             for digit in digits:
                 digit.update_map(i,j,pixel)
     #for digit in digits:
+        
 
-
-    return np.argmax([x.get_posterior_probability() for x in digits])
+    return np.argmax([p for p in [x].get_posterior_probability() for x in digits])
 
 def print_image(image):
     """

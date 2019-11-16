@@ -6,8 +6,10 @@ class digit_class():
         #self.images=[]
         self.name=identifier
         self.pixel_counts=np.zeros([28,28,2])
+        self.feature_count=728 #28*28
         self.image_count=0
         self.posterior_probability=0
+        self.training_data_count=5000
     
     def get_image(self, training_data):
         
@@ -25,7 +27,7 @@ class digit_class():
         #self.images.append(image)
     
     def set_likely_image(self):
-        self.likely_image=np.zeros([28,28,2])
+        self.likely_image=np.array([28,28,2])
         for i in range(28):
             for j in range(28):
                     for p in range(2):
@@ -34,14 +36,15 @@ class digit_class():
                         # as the resulting estimate will be between the empirical 
                         # estimate xi / N, and the uniform probability 1/d
                         # I'm going to ballpark it and use the priors as k
-                        laplace = self.pixel_counts[i,j,p] + self.empirical_frequency
-                        smoothing = self.training_data_count + self.empirical_frequency*2
-                        self.likely_image[i,j,p] = laplace / smoothing
+                        self.Laplace=self.pixel_counts[i,j,p]+self.empirical_frequency
+                        self.smoothing=self.training_data_count+self.empirical_frequency*2
+                        self.likely_image[i,j,p]=Laplace/smoothing
     
-    def set_empirical_frequency(self,sample_size):
-        self.empirical_frequency=self.image_count/sample_size
-    def finish_training(self,sample_size):
-        self.set_empirical_frequency(sample_size)
+    def set_empirical_frequency(self):
+        self.empirical_frequency=self.pixel_counts[0,0,2]/self.training_data_count
+    
+    def finish_training(self):
+        self.set_empirical_frequency()
         self.posterior_probability=math.log(self.empirical_frequency)
         self.set_likely_image()
 
@@ -50,9 +53,9 @@ class digit_class():
         NOTE the log of class has already been added to the posterior probability at the end
         of the finish training function 
         """
-        self.posterior_probability+=math.log(self.likely_image[i,j,pixel])        
+        self.posterior_probability+=math.log(self.likely_image([i,j,pixel]))        
 
-    def get_posterior_probability(self):
+    def get_posterior_probability():
         return self.posterior_probability
     
 def train_model(training_data,training_labels):
@@ -64,7 +67,7 @@ def train_model(training_data,training_labels):
                 digits[label].get_image(data)
     for digit in digits:
         #let each digit class know that no more data will be added
-        digit.finish_training(5000)
+        digit.finish_training()
     return digits    
 
 def test_model(test_data,test_labels,digits):
@@ -97,9 +100,9 @@ def map_classification(test_file,digits):
             for digit in digits:
                 digit.update_map(i,j,pixel)
     #for digit in digits:
+        
 
-
-    return np.argmax([x.get_posterior_probability() for x in digits])
+    return np.argmax([p for p in [x].get_posterior_probability() for x in digits])
 
 def print_image(image):
     """

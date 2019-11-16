@@ -6,6 +6,7 @@ class digit_class():
         #self.images=[]
         self.name=identifier
         self.pixel_counts=np.zeros([28,28,2])
+        self.feature_count=728 #28*28
         self.image_count=0
         self.posterior_probability=0
     
