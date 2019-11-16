@@ -1,4 +1,5 @@
-import numpy as np  
+import numpy as np   
+import math
 
 class digit_class():
     def __init__(self,identifier,training_data_count=5000):
@@ -42,7 +43,7 @@ class digit_class():
     
     def finish_training(self,sample_size):
         self.set_empirical_frequency(sample_size)
-        self.posterior_probability=abs(np.log(self.empirical_frequency))
+        self.posterior_probability=np.log(self.empirical_frequency)
         print(self.empirical_frequency)
         self.set_likely_image(sample_size)
 
@@ -52,8 +53,8 @@ class digit_class():
         of the finish training function 
         """
         if i==0 and j==0:
-            self.posterior_probability=abs(np.log(self.empirical_frequency))
-        self.posterior_probability+=abs(np.log(self.likely_image[i,j,pixel]))        
+            self.posterior_probability=np.log(self.empirical_frequency)
+        self.posterior_probability+=np.log(self.likely_image[i,j,pixel])        
 
     def get_posterior_probability(self):
         print("posterior probability: ")

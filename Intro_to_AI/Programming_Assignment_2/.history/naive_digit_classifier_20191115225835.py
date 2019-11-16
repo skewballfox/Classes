@@ -1,4 +1,5 @@
-import numpy as np  
+import numpy as np   
+import math
 
 class digit_class():
     def __init__(self,identifier,training_data_count=5000):
@@ -39,10 +40,9 @@ class digit_class():
     
     def set_empirical_frequency(self,sample_size):
         self.empirical_frequency=self.image_count/sample_size
-    
     def finish_training(self,sample_size):
         self.set_empirical_frequency(sample_size)
-        self.posterior_probability=abs(np.log(self.empirical_frequency))
+        self.posterior_probability=np.log(self.empirical_frequency)
         print(self.empirical_frequency)
         self.set_likely_image(sample_size)
 
@@ -51,13 +51,11 @@ class digit_class():
         NOTE the log of class has already been added to the posterior probability at the end
         of the finish training function 
         """
-        if i==0 and j==0:
-            self.posterior_probability=abs(np.log(self.empirical_frequency))
-        self.posterior_probability+=abs(np.log(self.likely_image[i,j,pixel]))        
+        self.posterior_probability+=np.log(self.likely_image[i,j,pixel])        
 
     def get_posterior_probability(self):
-        print("posterior probability: ")
-        print(self.posterior_probability)
+        #print("posterior probability: ")
+        #print(self.posterior_probability)
         return self.posterior_probability
     
 def train_model(training_data,training_labels):
@@ -93,7 +91,7 @@ def map_classification(test_file,digits):
 
     """
     probs=[]
-    #print(len(digits))
+    print(len(digits))
     for i in range(28):
         raw_data=test_file.readline()
         for j in range(28):

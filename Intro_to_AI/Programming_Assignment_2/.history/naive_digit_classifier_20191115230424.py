@@ -1,4 +1,5 @@
-import numpy as np  
+import numpy as np   
+import math
 
 class digit_class():
     def __init__(self,identifier,training_data_count=5000):

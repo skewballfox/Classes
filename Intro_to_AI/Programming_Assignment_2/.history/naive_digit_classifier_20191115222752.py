@@ -1,4 +1,5 @@
-import numpy as np  
+import numpy as np   
+import math
 
 class digit_class():
     def __init__(self,identifier,training_data_count=5000):
@@ -33,31 +34,26 @@ class digit_class():
                         # as the resulting estimate will be between the empirical 
                         # estimate xi / N, and the uniform probability 1/d
                         # I'm going to ballpark it and use the priors as k
+                        print(self.empirical_frequency)
                         laplace = self.pixel_counts[i,j,p] + self.empirical_frequency
                         smoothing = sample_size + self.empirical_frequency*2
                         self.likely_image[i,j,p] = laplace / smoothing
     
     def set_empirical_frequency(self,sample_size):
         self.empirical_frequency=self.image_count/sample_size
-    
     def finish_training(self,sample_size):
         self.set_empirical_frequency(sample_size)
-        self.posterior_probability=abs(np.log(self.empirical_frequency))
-        print(self.empirical_frequency)
-        self.set_likely_image(sample_size)
+        self.posterior_probability=math.log(self.empirical_frequency)
+        self.set_likely_image()
 
     def update_map(self,i,j,pixel):
         """
         NOTE the log of class has already been added to the posterior probability at the end
         of the finish training function 
         """
-        if i==0 and j==0:
-            self.posterior_probability=abs(np.log(self.empirical_frequency))
-        self.posterior_probability+=abs(np.log(self.likely_image[i,j,pixel]))        
+        self.posterior_probability+=math.log(self.likely_image[i,j,pixel])        
 
     def get_posterior_probability(self):
-        print("posterior probability: ")
-        print(self.posterior_probability)
         return self.posterior_probability
     
 def train_model(training_data,training_labels):
@@ -81,7 +77,7 @@ def test_model(test_data,test_labels,digits):
                 label=get_label(labels)
                 guess=map_classification(data,digits)
                 if guess==label:
-                    #print("woop")
+                    print("woop")
                     correct_count+=1
     print("got  {} out of {} correct".format(correct_count, image_count))
 
@@ -92,8 +88,6 @@ def map_classification(test_file,digits):
     """
 
     """
-    probs=[]
-    #print(len(digits))
     for i in range(28):
         raw_data=test_file.readline()
         for j in range(28):
@@ -103,8 +97,7 @@ def map_classification(test_file,digits):
                 pixel=0
             for digit in digits:
                 digit.update_map(i,j,pixel)
-    for digit in digits:
-        probs.append(digit.get_posterior_probability())
+    #for digit in digits:
 
 
     return np.argmax([x.get_posterior_probability() for x in digits])
