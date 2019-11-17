@@ -4,11 +4,14 @@ import logging
 
 
 class naive_bayes_classifier():
-    def __init__(self,metadata):
-
+    def __init__(self,metadata,debug=False):
+        logging.basicConfig(level=logging.INFO)
+        logger=logging.getLogger(__name__)
+        if debug==True:
+            logger.info("metadata: %s", metadata)
         self.digits=[digit_class(digit) for digit in range(10)]
         self.training_sample_size=metadata["training_sample_size"]
-        self.test_sample_size=metadata["training_sample_size"]
+        self.test_sample_size=metadata["test_sample_size"]
         self.train_model(metadata["training_data"],metadata["training_labels"])
         self.test_model(metadata["test_data"],metadata["test_labels"])
         self.command_list=['map']
@@ -18,6 +21,7 @@ class naive_bayes_classifier():
         grabs the next label from a data file
         """
         raw_data=label_file.readline()
+        print(raw_data)
         value=int(raw_data)
         return value
     
@@ -36,7 +40,7 @@ class naive_bayes_classifier():
         with open(test_data,'r') as data: 
             with open(test_labels,'r') as labels:
                 for k in range(self.test_sample_size):
-                    label=get_label(labels)
+                    label=self.get_label(labels)
                     estimate=self.map_estimation(data)
                     if estimate==label:
                         print("woop")
@@ -59,13 +63,16 @@ class naive_bayes_classifier():
                 try:
                     if raw_data[j]!=' ':
                         pixel=1
+                        #print('#','')
                     else:
                         pixel=0
+                        #print(' ','')
                     for digit in self.digits:
                         digit.update_map(i,j,pixel)
                 except IndexError:
                     print("somethings fishy: ",j)
                     quit()
+        #print()
         for digit in self.digits:
             probs.append(digit.get_posterior_probability())
 
@@ -161,9 +168,9 @@ class digit_class():
             print()'''
         return self.posterior_probability
     
-    def update(self,command):
-        if command=='map':
-            self.update_map()
+    #def update(self,command):
+        #if command=='map':
+            #self.update_map()
     
 
 if __name__=="__main__":
@@ -177,5 +184,3 @@ if __name__=="__main__":
 
     print(data)        
     classifier=naive_bayes_classifier(data)
-    #digits=train_model('digitdata/trainingimages','digitdata/traininglabels')
-    #test_model('digitdata/testimages','digitdata/traininglabels',digits)
