@@ -1,0 +1,9 @@
+i ← 1
+while i < length(Array)
+    j ← i
+    while j > 0 and Array[j-1] > Array[j]
+        swap Array[j] and Array[j-1]
+        j ← j - 1
+    end while
+    i ← i + 1
+end while
