@@ -1,6 +1,6 @@
 /*
     Author: Joshua Ferguson
-    Purpose: perform an insertion sort, and let me play around with rust for a bit
+    Purpose: simulate a multi
 
  */
 use rand::{thread_rng, Rng};
@@ -11,7 +11,7 @@ use rand::{thread_rng, Rng};
 
 macro_rules! random_int_array
 {
-    ($size:ident,$random_array:ident,$min:ident,$max:ident)=>
+    ($random_array:ident,$size:ident,$min:ident,$max:ident)=>
     (
 
         let mut $random_array: [i32; $size]=[0;$size];
@@ -33,7 +33,11 @@ macro_rules! random_int_array
 */
 
 fn main() 
-{
-    println!("Hello, world!");
+{   
+    //initialize the data
+    random_int_array!(data_set_1,100,0,99);
+    random_int_array!(data_set_2,100,0,99);
+    random_int_array!(data_set_3,100,0,99);
+    random_int_array!(priorities,100,1,3);
 }
 
