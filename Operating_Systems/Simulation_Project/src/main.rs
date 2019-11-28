@@ -3,15 +3,19 @@
     Purpose: simulate a multi
 
  */
+
 use rand::{thread_rng, Rng};
+
+mod stack;
 
 /*
 ##############################   Macro Definitions   ##################################
 */
 
+
 macro_rules! random_int_array
 {
-    ($random_array:ident,$size:ident,$min:ident,$max:ident)=>
+    ($random_array:ident,$size:expr,$min:expr,$max:expr)=>
     (
 
         let mut $random_array: [i32; $size]=[0;$size];
