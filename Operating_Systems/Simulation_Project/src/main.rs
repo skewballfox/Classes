@@ -6,8 +6,8 @@
 
 use rand::{thread_rng, Rng};
 
-mod stack;
-
+//mod stack;
+mod persistent_stack;
 /*
 ##############################   Macro Definitions   ##################################
 */
@@ -32,6 +32,11 @@ macro_rules! random_int_array
 
 }
 
+/*macro_rules! test_this
+{
+    ($data_set, $)
+}*/
+
 /*
 ##############################   Main Body   ##################################
 */
@@ -43,5 +48,25 @@ fn main()
     random_int_array!(data_set_2,100,0,99);
     random_int_array!(data_set_3,100,0,99);
     random_int_array!(priorities,100,1,3);
+
+
+    let lifo=persistent_stack::Stack::new();
+    println!("on the stack: ");
+    for value in data_set_1.iter()
+    {
+        lifo.push(value);
+        println!("{}",value)
+        
+    }
+    let mut iter=lifo.iter();
+    let mut value=iter.next();
+    println!("off the stack: ");
+    while value!=None
+    {
+        println!("{:?}",value);        
+        value=iter.next();
+    }
+    
+    
 }
 
