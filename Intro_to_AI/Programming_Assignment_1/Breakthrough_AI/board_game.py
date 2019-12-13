@@ -5,7 +5,7 @@ from string import ascii_lowercase
 def N_board(object):
     """general chess board, mainly meant to handle gui functions
     game logic is to be handled by the respective game class"""
-    def __init__(self):
+    def __init__(self,player_1=Player(),player_2=Player()):
         self.move=1
         self.create_board()
         self.white=Player()
@@ -24,12 +24,12 @@ def N_board(object):
                     Alt=False
         del Alt
         
-class Chess_board(object):
+class Chess_board(N_board):
     """general chess board gui, mainly meant to handle gui functions
     game logic is to be handled by the respective game class"""
-    def __init__(self,types):
+    def __init__(self,types,player_1=Player(),player_2=Player()):
         """make an 8*8 board"""
-        self.move=1
+        #self.move=1
         self.initial=pygame.init()
         self.colors = [(131,131,131), (222,222,222)]
         board_dimensions = 480          # Proposed physical surface size.
@@ -38,9 +38,10 @@ class Chess_board(object):
         self.surface = pygame.display.set_mode((board_dimensions, board_dimensions))
         #self.clock=pygame.time.clock()
         self.load_pieces(types)
-        self.create_board()
-        self.white=Player()
-        self.black=Player()
+        super().__init__(player_1,player_2)
+        #self.create_board()
+        #self.white=Player()
+        #self.black=Player()
         
         
 
@@ -50,10 +51,10 @@ class Chess_board(object):
         for letter in "ABCDEFGH":
             for i in range(1,9):
                 if Alt==False:
-                    self.matrix["{}{}".format(letter,i)]=Square((222,222,222))
+                    self.matrix["{}{}".format(letter,i)]=PyGame_Square((222,222,222))
                     Alt=True
                 else:
-                    self.matrix["{}{}".format(letter,i)]=Square((131,131,131))
+                    self.matrix["{}{}".format(letter,i)]=PyGame_Square((131,131,131))
                     Alt=False
         del Alt
     
@@ -132,10 +133,15 @@ class Square(object):
         return ord(self.address[0].lower())-97
     def get_num_file(self):
         return ord(self.address[1])
+    
+
+class PyGame_Square(Square):
+    def __init__(self,color):
+        super().__init__()
+        self.color=color
+    
     def get_color(self):
         return self.color
-
-
 class Piece(object):
     """General Piece for board games"""
     def __init__(self,color,location):

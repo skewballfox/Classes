@@ -14,7 +14,7 @@ class Breakthrough_pawn(Piece):
 
 
 class Breakthrough(Chess_board):
-    def __init__(self):
+    def __init__(self,player_1=Player(),player_2=Player()):
         """Initial state of the game"""
         super().__init__(["pawn"])
         self.create_pieces()
