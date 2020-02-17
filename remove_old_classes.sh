@@ -1,7 +1,8 @@
+#!/usr/bin/bash
 class_path="$(pwd)"
 rm_local_class() {
     echo locally untracking $@
-    $config update-index --skip-worktree "$class_path/$@"
+    git update-index --skip-worktree "$class_path/$@"
     rm -r "$class_path/$@"    
 }
 
