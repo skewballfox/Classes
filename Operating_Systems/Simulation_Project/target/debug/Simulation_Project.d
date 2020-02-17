@@ -1,0 +1,1 @@
+/home/user/Workspace/Operating_Systems/Simulation_Project/target/debug/Simulation_Project: /home/user/Workspace/Operating_Systems/Simulation_Project/src/main.rs /home/user/Workspace/Operating_Systems/Simulation_Project/src/persistent_stack.rs
