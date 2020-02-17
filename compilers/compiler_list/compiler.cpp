@@ -474,35 +474,35 @@ void statement(symbol &sym, int tableinx)
 				getsym(sym);
 			}
 		case WRITESYM:
-		getsym(sym);
-		if (sym!=LPAREN)
-			error(ERROR_LPAREN);
-		expression(sym,tableinx);
-		getsym(sym);
-		while (sym!=RPAREN)
-		{
-			if (sym!=COMMA)
-				error(ERROR_COMMA);
 			getsym(sym);
+			if (sym!=LPAREN)
+				error(ERROR_LPAREN);
 			expression(sym,tableinx);
 			getsym(sym);
-		}
-		break;
+			while (sym!=RPAREN)
+			{
+				getsym(sym);
+				expression(sym,tableinx);
+				getsym(sym);
+				if (sym!=RPAREN && sym!=COMMA)
+    					error(ERROR_COMMA);
+			}
+			break;
 		case WRITELNSYM:
-		getsym(sym);
-		if (sym!=LPAREN)
-			error(ERROR_LPAREN);
-		expression(sym,tableinx);
-		getsym(sym);
-		while (sym!=RPAREN)
-		{
-			if (sym!=COMMA)
-				error(ERROR_COMMA);
 			getsym(sym);
+			if (sym!=LPAREN)
+				error(ERROR_LPAREN);
 			expression(sym,tableinx);
 			getsym(sym);
-		}
-		break;
+			while (sym!=RPAREN)
+			{
+				getsym(sym);
+				expression(sym,tableinx);
+				getsym(sym);
+				if (sym!=RPAREN && sym!=COMMA)
+    					error(ERROR_COMMA);
+			}
+			break;
 
 	}
 }
