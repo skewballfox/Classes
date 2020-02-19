@@ -425,12 +425,10 @@ void statement(symbol &sym, int tableinx)
 			break;
 		case REPEATSYM:
 			getsym(sym);
-			statement(sym,tableinx);
-			getsym(sym);
 			while (sym != UNTILSYM)
-			{
-				getsym(sym);
+			{	
 				statement(sym, tableinx);
+				getsym(sym);
 			}
 			getsym(sym);
 			condition(sym,tableinx);
@@ -477,30 +475,31 @@ void statement(symbol &sym, int tableinx)
 			getsym(sym);
 			if (sym!=LPAREN)
 				error(ERROR_LPAREN);
+			getsym(sym);
 			expression(sym,tableinx);
 			getsym(sym);
-			while (sym!=RPAREN)
+			while (sym==COMMA)
 			{
+
 				getsym(sym);
 				expression(sym,tableinx);
 				getsym(sym);
-				if (sym!=RPAREN && sym!=COMMA)
-    					error(ERROR_COMMA);
 			}
 			break;
 		case WRITELNSYM:
 			getsym(sym);
 			if (sym!=LPAREN)
 				error(ERROR_LPAREN);
+			getsym(sym);
 			expression(sym,tableinx);
 			getsym(sym);
-			while (sym!=RPAREN)
+			cout << sym << endl;
+			while (sym==COMMA)
 			{
+				cout<<"hmm"<<endl;
 				getsym(sym);
 				expression(sym,tableinx);
 				getsym(sym);
-				if (sym!=RPAREN && sym!=COMMA)
-    					error(ERROR_COMMA);
 			}
 			break;
 

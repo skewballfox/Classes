@@ -18,7 +18,7 @@ BEGIN
                           WRITELN(A2,B2);
                           B2:=B2+2;
                     UNTIL B2>A2;
-              A2:=A2+1
+              A2:=A2+1;
         UNTIL A2>5;
 END;
 
