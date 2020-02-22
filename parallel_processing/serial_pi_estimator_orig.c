@@ -16,30 +16,11 @@ struct point{
 };
 
 double distance(struct point,struct point);
-long double pi_estimator(int);
-
+long double pi_estimator();
 int main ()
 {
     srand((unsigned)time(NULL));//initialize random seed
-    
-    printf("pi is %Lf", pi_estimator(__INT_MAX__));
-
-    return 0;
-}
-
-double distance(struct point point_1, struct point point_2){
-    /*function: distance
-    pupose: calculate the distance between two points
-    */
-    return sqrt(pow((point_2.x-point_1.x),2)+pow((point_2.y-point_1.y),2));
-}
-
-long double pi_estimator(int max_tosses)
-{   
-    /*function: pi_estimator
-    purpose: estimate pi using monte carlo method by generating
-    random points
-    */
+    int max_tosses=__INT_MAX__;
     int circle_count;
     struct point center;
     center.x=1;
@@ -51,5 +32,16 @@ long double pi_estimator(int max_tosses)
         dart_toss.y=((double)rand()*(2.0)/RAND_MAX);
         if (distance(center,dart_toss)<1.0) {circle_count++;}
     }
-    return 4*((long double)(circle_count)/(long double)(max_tosses));
+    long double pi=4*((long double)(circle_count)/(long double)(max_tosses));
+    printf("pi is %Lf", pi);
+
+    return 0;
 }
+
+double distance(struct point point_1, struct point point_2){
+    /*function: distance
+    pupose: calculate the distance between two points
+    */
+    return sqrt(pow((point_2.x-point_1.x),2)+pow((point_2.y-point_1.y),2));
+}
+

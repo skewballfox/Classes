@@ -286,54 +286,57 @@ int position(int tableinx)
 // -------------------------------------------
 void block(symbol &sym, int tableinx)
 {
-	if (sym == CONSTSYM)
-	{
-		// ---- CONSTANT SYM ----
-		getsym(sym);
-		enter(CONSTANT, line, sym, tableinx);
-
-		while (sym == COMMA)
+	//BEGIN ADDITION
+	while (sym== CONSTSYM or sym==VARSYM or sym==PROCSYM)
+	{//END ADDITION
+		if (sym == CONSTSYM)
 		{
+			// ---- CONSTANT SYM ----
 			getsym(sym);
 			enter(CONSTANT, line, sym, tableinx);
-		}
-		if (sym != SEMICOLON)
-			error(ERROR_SEMICOLON);
-		getsym(sym);
-	}
-	// ---- VARIABLE SYM ----
-	if (sym == VARSYM)
-	{
-		getsym(sym);
-		enter(VARIABLE, line, sym, tableinx);
-		while (sym == COMMA)
-		{
-			getsym(sym);
-			enter(VARIABLE, line, sym, tableinx);
-		}
-		if (sym != SEMICOLON)
-			error(ERROR_SEMICOLON);
-		getsym(sym);
-	}
-	// ---- PROCEDURE SYM ----
-	while (sym == PROCSYM)
-	{
-		while (sym == PROCSYM)
-		{
-			getsym(sym);
-			if (sym != IDENT)
-				error(ERROR_IDENT);
-			enter(PROCEDURE, line, sym, tableinx);
-			getsym(sym);
 
-			block(sym, tableinx);//inc static link for functions inside of functions, table current pointer
-
+			while (sym == COMMA)
+			{
+				getsym(sym);
+				enter(CONSTANT, line, sym, tableinx);
+			}
 			if (sym != SEMICOLON)
 				error(ERROR_SEMICOLON);
 			getsym(sym);
 		}
-	}
+		// ---- VARIABLE SYM ----
+		if (sym == VARSYM)
+		{
+			getsym(sym);
+			enter(VARIABLE, line, sym, tableinx);
+			while (sym == COMMA)
+			{
+				getsym(sym);
+				enter(VARIABLE, line, sym, tableinx);
+			}
+			if (sym != SEMICOLON)
+				error(ERROR_SEMICOLON);
+			getsym(sym);
+		}
+		// ---- PROCEDURE SYM ----
+		while (sym == PROCSYM)
+		{
+			while (sym == PROCSYM)
+			{
+				getsym(sym);
+				if (sym != IDENT)
+					error(ERROR_IDENT);
+				enter(PROCEDURE, line, sym, tableinx);
+				getsym(sym);
 
+				block(sym, tableinx);//inc static link for functions inside of functions, table current pointer
+
+				if (sym != SEMICOLON)
+					error(ERROR_SEMICOLON);
+				getsym(sym);
+			}
+		}
+	}//ADDITION
 	statement(sym, tableinx);
 }
 
