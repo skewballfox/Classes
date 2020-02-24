@@ -16,14 +16,26 @@ struct point{
 };
 
 double distance(struct point,struct point);
-long double pi_estimator(int);
+int toss_darts(int);
 
-int main ()
-{
+int main (int arg_count,char* arg_vector[])
+{   
+    //necessary variables
+    int total_tosses=__INT_MAX__;
+    int circle_count;
+    double start,finish;
     srand((unsigned)time(NULL));//initialize random seed
-    
-    printf("pi is %Lf", pi_estimator(__INT_MAX__));
+    //start timer
+    GET_TIME(start);
 
+    //do the math
+    circle_count=toss_darts;
+    //get finishing time
+    GET_TIME(finish);
+
+    long double pi=4*((long double)circle_count/(long double)total_tosses);
+    printf("pi is %Lf/n", pi);
+    printf("elapsed time is %lf",finish-start);
     return 0;
 }
 
@@ -34,7 +46,7 @@ double distance(struct point point_1, struct point point_2){
     return sqrt(pow((point_2.x-point_1.x),2)+pow((point_2.y-point_1.y),2));
 }
 
-long double pi_estimator(int max_tosses)
+int toss_darts(int max_tosses)
 {   
     /*function: pi_estimator
     purpose: estimate pi using monte carlo method by generating
@@ -51,5 +63,5 @@ long double pi_estimator(int max_tosses)
         dart_toss.y=((double)rand()*(2.0)/RAND_MAX);
         if (distance(center,dart_toss)<1.0) {circle_count++;}
     }
-    return 4*((long double)(circle_count)/(long double)(max_tosses));
+    return circle_count;
 }

@@ -1,8 +1,11 @@
 /*
-    Purpose: calculate pi serially using monte carlo method
-    by simulating dart tosses at a 2x2 square containing a
-    dart board with radius 1
-    
+    Purpose: calculate pi in parallel with collective communication
+    using monte carlo method by simulating dart tosses at a 2x2
+    square containing a dart board with radius 1
+
+    command-line aguments:
+      1) number_of_processes
+      2) value to divide total iteration count 
     Author: Joshua Fergsuon
 */
 #include <time.h>
@@ -24,9 +27,8 @@ int main (int arg_count, char* arg_vector[])
     //necessary variables
     int number_of_processes;
     int process_rank;
-    int local_circle_count,total_circle_count;
+    int local_cicle_count, total_circle_count;
     double start,finish,local_elapsed,elapsed;
-   
     //initializations 
     MPI_Init(&arg_count,&arg_vector);
     MPI_Comm_rank(MPI_COMM_WORLD, &process_rank);
@@ -35,48 +37,22 @@ int main (int arg_count, char* arg_vector[])
     srand((unsigned)time(NULL));//initialize random seed
     //start timer
     MPI_Barrier(MPI_COMM_WORLD);
-    start = MPI_Wtime();
-
+    start=MPI_Wtime();
     //figure out task
     int max_tosses = __INT_MAX__;   
     int local_tosses = max_tosses / number_of_processes; 
-    
-    local_circle_count = toss_darts(local_tosses);
-    //handle communication    
-    if (process_rank != 0) {
-        MPI_Send(&local_circle_count,1,MPI_INT,0,0,MPI_COMM_WORLD);
-                
-    } else {
-      
-        total_circle_count=local_circle_count;
-        
-        for (int source=1; source<number_of_processes;source++)
-        {
-            MPI_Recv(&local_tosses,1,MPI_INT,source,0,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            total_circle_count+=local_tosses;
-        }
-    }
-    //caclulate elapsed time
-    finish = MPI_Wtime();
-    local_elapsed=finish-start;
 
-    MPI_Reduce(&local_elapsed,&elapsed,1,MPI_DOUBLE,MPI_MAX,0,MPI_COMM_WORLD);
-    /* NOTE: I'm leaving the actual calculation of pi out of the timing of 
-    * each process, but I think I have a good reason for doing so: as coded the
-    * portion of the code that took the most time is distributed, the result
-    * is an integer that is then summed and sent to p0 before calculating pi.
-    * the alternative would involve unnecessarily adding to the code complexity for what
-    * would be likely a(n arguably insignificant) drop in performance, with the same result. 
-    * by saving this portion for the very end I'm hoping to shave off a unnecessarily
-    * wasted clock cycles, and keep the code more readable.  
-    */
-    if (process_rank==0)
-    {
+    local_circle_count = toss_darts(local_tosses);    
+    MPI_Reduce(&local_circle_count,&total_cicle_count,1,MPI_INT,MPI_SUM,0,MPI_COMM_WORLD);
+    finish=MPI_Wtime();
+    local_elapsed=finish-start;
+    MPI_Reduce(&local_elapsed,&elapsed,1,MPI_DOUBLE,MPI_MAX,0,MPI_COMM_WORLD);  
+    if (process_rank == 0){       
         long double pi = 4 * ((long double)total_circle_count / (long double)max_tosses);
         printf("pi is %Lf\n\n", pi);
-        printf("elapsed time is %lf\n\n",elapsed);
+        printf("elapsed time is %lf\n", elapsed);
     }
-    //tidy up
+
     MPI_Finalize();
     return 0;
 }
