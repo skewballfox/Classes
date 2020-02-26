@@ -1,20 +1,54 @@
+import java.io.PrintStream;
+
 import Scalar.Scalar;
-public class RealScalar implements Scalar {
+public class Polyterm implements Scalar {
     
-    void add(Scalar addend){
-        assert 
+    void add(Polyterm addend){
+        try {
+            if (this.exponent == addend.get_exponent())
+            {
+                this.coefficient+=addend.get_coefficient();
+            }else
+            {
+                System.out.println("oops");
+            }
+        } catch (Exception e) {
+            System.out.print("oops");
+        } 
     }
 
-    void multi(Scalar multiplicand);
+    void multi(Polyterm multiplicand) {
+        this.coefficient*=multiplicand.get_coefficient();
+        this.exponent+=multiplicand.get_coefficient();
+    }
 
-    void pow(int exponent);
+    void pow(int new_exponent)
+    {
+        this.exponent+=new_exponent;
+    }
 
-    void neg();
+    void neg()
+    {
+        this.coefficient*=-1;
+    }
 
-    void equals(Scalar comparator);
+    boolean equals(Polyterm comparator)
+    {
+        if (this.coefficient==comparator.get_coefficient() && this.exponent==comparator.get_exponent()){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-    void derive();
+    void derive()
+    {
+        if (this.exponent!=0){
+            this.coefficient*=(Double)this.exponent;
+            this.exponent-=1;
+        }
+    }
 
-    private int coefficient;
+    private scalar coefficient;
     private int exponent;
 }

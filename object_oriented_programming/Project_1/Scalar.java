@@ -1,14 +1,28 @@
-abstract class Scalar {
+public class Scalar {
 
-    abstract void add(Scalar addend);
+    public void add(Scalar addend){
 
-    abstract void multi(Scalar multiplicand);
+    }
 
-    abstract void pow(int exponent);
+    public void multi(Scalar multiplicand)
 
-    abstract void neg();
+    public void pow(int exponent)
+    {
+        this.value;
+    }
 
-    abstract void equals(Scalar comparator);
+    public void neg()
+    {
+        this.value*=-1;
+    }
 
-    abstract void derive();
+    public void equals(Scalar comparator);
+
+
+    public double get_value(){
+        return value;
+    }
+
+    private double value;
+    
 }
