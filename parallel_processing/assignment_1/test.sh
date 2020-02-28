@@ -13,7 +13,7 @@ mpirun -c 8 ./$1 $2 >> $3
 
 touch n1_data.md n2_data.md n3_data.md
 # compile the code
-gcc -lm serial_pi_estimator.c -o serial_pi_estimator 
+gcc -std=c11 -lm serial_pi_estimator.c -o serial_pi_estimator 
 
 module load openmpi-2.0/gcc
 mpi_compile sp_mpi_pi_estimator.c

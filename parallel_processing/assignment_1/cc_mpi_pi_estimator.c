@@ -27,7 +27,7 @@ int main (int arg_count, char* arg_vector[])
     //necessary variables
     int number_of_processes;
     int process_rank;
-    int local_cicle_count, total_circle_count;
+    int local_circle_count, total_circle_count;
     double start,finish,local_elapsed,elapsed;
     //initializations 
     MPI_Init(&arg_count,&arg_vector);
@@ -38,19 +38,19 @@ int main (int arg_count, char* arg_vector[])
     
     //figure out task
     int total_toss_dividend=1;
-    if (arg_count<=2){total_toss_dividend=(int)(arg_vector[1]);}
+    if (arg_count<=2){total_toss_dividend=atoi(arg_vector[1]);}
     int total_tosses=__INT_MAX__/total_toss_dividend;   
     int local_tosses = total_tosses / number_of_processes; 
     //start timer
     MPI_Barrier(MPI_COMM_WORLD);
     start=MPI_Wtime();
     local_circle_count = toss_darts(local_tosses);    
-    MPI_Reduce(&local_circle_count,&total_cicle_count,1,MPI_INT,MPI_SUM,0,MPI_COMM_WORLD);
+    MPI_Reduce(&local_circle_count,&total_circle_count,1,MPI_INT,MPI_SUM,0,MPI_COMM_WORLD);
     finish=MPI_Wtime();
     local_elapsed=finish-start;
     MPI_Reduce(&local_elapsed,&elapsed,1,MPI_DOUBLE,MPI_MAX,0,MPI_COMM_WORLD);  
     if (process_rank == 0){       
-        long double pi = 4 * ((long double)total_circle_count / (long double)max_tosses);
+        long double pi = 4 * ((long double)total_circle_count / (long double)total_tosses);
         printf("processors: %d\t--\tpi: %Lf\t--\t",number_of_processes, pi);
         printf("elapsed time:%lf\n", elapsed);
     }

@@ -23,7 +23,7 @@ int main (int arg_count, char* arg_vector[])
 {
     //necessary variables
     int total_toss_dividend=1;
-    if (arg_count<=2){total_toss_dividend=(int)(arg_vector[1]);}
+    if (arg_count<=2){total_toss_dividend=atoi(arg_vector[1]);}
     int total_tosses=__INT_MAX__/total_toss_dividend;
     int number_of_processes;
     int process_rank;
