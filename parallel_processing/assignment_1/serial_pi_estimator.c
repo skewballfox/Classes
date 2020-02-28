@@ -21,7 +21,7 @@ int toss_darts(int);
 int main (int arg_count,char* arg_vector[])
 {   
     //necessary variables
-    int total_tosses=__INT_MAX__;
+    int total_tosses=__INT_MAX__/int(arg_vector[1]);
     int circle_count;
     double start,finish;
     srand((unsigned)time(NULL));//initialize random seed
@@ -34,8 +34,8 @@ int main (int arg_count,char* arg_vector[])
     GET_TIME(finish);
 
     long double pi=4*((long double)circle_count/(long double)total_tosses);
-    printf("pi is %Lf/n", pi);
-    printf("elapsed time is %lf",finish-start);
+    printf("serial\t--\tpi: %Lf/t--/t", pi);
+    printf("elapsed time: %lf",finish-start);
     return 0;
 }
 

@@ -39,7 +39,7 @@ int main (int arg_count, char* arg_vector[])
     MPI_Barrier(MPI_COMM_WORLD);
     start=MPI_Wtime();
     //figure out task
-    int max_tosses = __INT_MAX__;   
+    int max_tosses = __INT_MAX__/(int)(arg_vector[1]);   
     int local_tosses = max_tosses / number_of_processes; 
 
     local_circle_count = toss_darts(local_tosses);    
@@ -49,8 +49,8 @@ int main (int arg_count, char* arg_vector[])
     MPI_Reduce(&local_elapsed,&elapsed,1,MPI_DOUBLE,MPI_MAX,0,MPI_COMM_WORLD);  
     if (process_rank == 0){       
         long double pi = 4 * ((long double)total_circle_count / (long double)max_tosses);
-        printf("pi is %Lf\n\n", pi);
-        printf("elapsed time is %lf\n", elapsed);
+        printf("processors: %d\t--\tpi: %Lf\t--\t",number_of_processes, pi);
+        printf("elapsed time:%lf\n", elapsed);
     }
 
     MPI_Finalize();
