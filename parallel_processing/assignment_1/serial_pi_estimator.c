@@ -21,7 +21,9 @@ int toss_darts(int);
 int main (int arg_count,char* arg_vector[])
 {   
     //necessary variables
-    int total_tosses=__INT_MAX__/(int)(arg_vector[1]);
+    int total_toss_dividend=1;
+    if (arg_count<=2){total_toss_dividend=(int)(arg_vector[1]);}
+    int total_tosses=__INT_MAX__/total_toss_dividend;
     int circle_count;
     double start,finish;
     srand((unsigned)time(NULL));//initialize random seed

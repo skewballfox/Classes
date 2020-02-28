@@ -35,13 +35,15 @@ int main (int arg_count, char* arg_vector[])
     MPI_Comm_size(MPI_COMM_WORLD, &number_of_processes);
     
     srand((unsigned)time(NULL));//initialize random seed
+    
+    //figure out task
+    int total_toss_dividend=1;
+    if (arg_count<=2){total_toss_dividend=(int)(arg_vector[1]);}
+    int total_tosses=__INT_MAX__/total_toss_dividend;   
+    int local_tosses = total_tosses / number_of_processes; 
     //start timer
     MPI_Barrier(MPI_COMM_WORLD);
     start=MPI_Wtime();
-    //figure out task
-    int max_tosses = __INT_MAX__/(int)(arg_vector[1]);   
-    int local_tosses = max_tosses / number_of_processes; 
-
     local_circle_count = toss_darts(local_tosses);    
     MPI_Reduce(&local_circle_count,&total_cicle_count,1,MPI_INT,MPI_SUM,0,MPI_COMM_WORLD);
     finish=MPI_Wtime();
