@@ -29,6 +29,7 @@ int main (int arg_count, char* arg_vector[])
     int process_rank;
     int local_circle_count, total_circle_count;
     double start,finish,local_elapsed,elapsed;
+    
     //initializations 
     MPI_Init(&arg_count,&arg_vector);
     MPI_Comm_rank(MPI_COMM_WORLD, &process_rank);

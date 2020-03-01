@@ -1,6 +1,6 @@
 mpi_compile(){
   output="$(basename $1)"
-  mpicc -O2 -o $output $1
+  mpicc -O2 -std=c11 -o $output $1
 }
 
 mpi_run(){
@@ -11,13 +11,7 @@ mpirun -c 8 ./$1 $2 >> $3
 
 }
 
-touch n1_data.md n2_data.md n3_data.md
-# compile the code
-gcc -std=c11 -lm serial_pi_estimator.c -o serial_pi_estimator 
-
-module load openmpi-2.0/gcc
-mpi_compile sp_mpi_pi_estimator.c
-mpi_compile cc_mpi_pi_estimator.c
+# compile the code beforehand
 
 ./serial_pi_estimator 100 >> n1_data.md 
 ./serial_pi_estimator 10 >> n2_data.md

@@ -37,9 +37,8 @@ int main (int arg_count, char* arg_vector[])
     
     srand((unsigned)time(NULL));//initialize random seed
     
-    //figure out task
-    int max_tosses = __INT_MAX__/(int)(arg_vector[1]);   
-    int local_tosses = max_tosses / number_of_processes; 
+    //figure out task   
+    int local_tosses = total_tosses / number_of_processes; 
     
     //start timer
     MPI_Barrier(MPI_COMM_WORLD);
@@ -76,7 +75,7 @@ int main (int arg_count, char* arg_vector[])
     */
     if (process_rank==0)
     {
-        long double pi = 4 * ((long double)total_circle_count / (long double)max_tosses);
+        long double pi = 4 * ((long double)total_circle_count / (long double)total_tosses);
             
         printf("processors: %d\t--\tpi %Lf\t--\t",number_of_processes, pi);
         printf("elapsed time is %lf\n\n",elapsed);

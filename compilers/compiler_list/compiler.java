@@ -57,7 +57,19 @@ public class compiler
 			SEMICOLON,
 			COLON,
 			PERIOD,
-			BECOMES
+			BECOMES,
+			//Begin Additions
+			ELSESYM,
+			REPEATSYM,
+			UNTILSYM,
+			FORSYM,
+			TOSYM,
+			DOWNTOSYM,
+			CASESYM,
+			OFSYM,
+			CENDSYM,
+			WRITESYM,
+			WRITELNSYM
 		}
 
 		public static SYMBOL[] wsym =
@@ -114,7 +126,20 @@ public class compiler
 			{ 'P', 'R', 'O', 'C', 'E', 'D', 'U', 'R', 'E'},
 			{ 'T', 'H', 'E', 'N'},
 			{ 'V', 'A', 'R'},
-			{ 'W', 'H', 'I', 'L', 'E'}
+			{ 'W', 'H', 'I', 'L', 'E'},
+			//BEGIN ADDITIONS
+			{'E','L','S','E'},
+			{'R','E','P','E','A','T'},
+			{'U','N','T','I','L'},
+			{'F','O','R'},
+			{'T','O'},
+			{'D','O','W','N','T','O'},
+			{'C','A','S','E'},
+			{'O','F'},
+			{'C','E','N','D'},
+			{'W','R','I','T','E'},
+			{'W','R','I','T','E','L','N'}
+			//END ADDITIONS
 		};
 
 		static Scanner input;
@@ -154,7 +179,14 @@ public class compiler
 			"Right parenthesis or relational operator expected",/* 22 */
 			"Number is too large",/* 23 */
 			"Identifier expected",/* 24 */
-			"An expression cannot begin with this symbol"/* 25 */
+			"An expression cannot begin with this symbol",/* 25 */
+			//BEGIN ADDITIONS
+			"TO or DOWNTO symbol Expected",/* 26 */
+			"OF symbol Expected",/* 27 */
+			"colon expected",/* 28 */
+			"comma expected",/* 29 */
+			"UNTIL expected"/* 30 */
+			//END ADDITIONS
 		};
 
 		/* Simple Error Outputting Function */
@@ -612,6 +644,25 @@ public class compiler
 					else
 						Error(14);
 					break;
+				//BEGIN ADDITIONS
+				case REPEATSYM:
+					do {
+						GetSym();
+						Statement(tx);
+					} while (sym == SYMBOL.SEMICOLON)
+					if (sym!=SYMBOL.UNTILSYM)
+						Error(30);
+					GetSym();
+					Condition(tx);
+					break;
+				case FORSYM:
+					GetSym();
+					if (sym!=SYMBOL.IDENT)
+						Error()
+					Condition(tx);
+					do {
+						GetSym()
+					}
 			}
 		}
 

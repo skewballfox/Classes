@@ -28,15 +28,15 @@ int main (int arg_count,char* arg_vector[])
     double start,finish;
     srand((unsigned)time(NULL));//initialize random seed
     //start timer
-    GET_TIME(start);
+    start=time(NULL);
 
     //do the math
     circle_count=toss_darts(total_tosses);
     //get finishing time
-    GET_TIME(finish);
+    finish=time(NULL);
 
     long double pi=4*((long double)circle_count/(long double)total_tosses);
-    printf("serial\t--\tpi: %Lf/t--/t", pi);
+    printf("serial\t--\tpi: %Lf\t--\t", pi);
     printf("elapsed time: %lf",finish-start);
     return 0;
 }
