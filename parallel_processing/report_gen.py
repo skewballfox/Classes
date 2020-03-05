@@ -23,7 +23,7 @@ for line in  open(assignment_directory+report_file, 'r'):
         data.append(get_table_row(line))
 
 runtime_data,pi_data=data[(len(data)//2):],data[:(len(data)//2)]
-serial_pi_estimation,sp_pi_estimations,cc_pi_estimations={},{},{}
+serial_data,sp_pi_estimations,cc_pi_estimations={},{},{}
 n=0
 
 for row in pi_data:
@@ -32,6 +32,8 @@ for row in pi_data:
     sp_pi_estimations[2**n]=row[0::2]
     n+=1
 
+serial_data["pi_estimation"]=[3.143586,3.141867,3.141596]
+serial_data["runtime"]=[2.0,10.0,94.0]
 serial_runtimes,sp_runtimes,cc_runtimes={},{},{}
 n=0
 
@@ -40,6 +42,7 @@ for row in runtime_data:
     cc_runtimes[2**n]=row[1::2]
     sp_runtimes[2**n]=row[0::2]
     n+=1
+
 
 pprint(sp_runtimes)
 
