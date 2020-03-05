@@ -1,68 +1,54 @@
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+
 
 //public enum Scalar_types{integer, decimal, fraction, irrational};
 public class Scalar {
-    Scalar(string input) throws Exception
-    {   
-        string temp="";
-        if (input.matches("[0-9]+(\\.[0-9]+)?+$"))//if only digits
-        {
-            this.value=input;
-        }
-        else//plan on adding support for fractions and irrationals
-        {
-            throw new Exception("invalid input");
-        }
+    Scalar(double input)
+    {  
+        value=input;
     }
 
-    public void add(Scalar addend){
-        //if this.scalarType==addend.get_type()
-        if (value.contains(".") or (addend.get_value()).contains(".")){
-            this.value=String.valueOf(Double.valueOf(value)+Double.valueof(addend.get_value()));
-        } else { //add support for other stuff later
-            this.value=String.valueOf(Integer.valueOf(value)+integer.valueof(addend.get_value()));
-        }
-    }   
+    public Scalar add(Scalar addend){
+        return new Scalar(value+addend.get_value());
+    }
 
-    public void multi(Scalar multiplicand)
+    public Scalar multi(Scalar multiplicand)
     {
-        if (value.contains(".") or (addend.get_value()).contains(".")){
-            this.value=String.valueOf(Double.valueOf(value)*Double.valueof(addend.get_value()));
-        } else { //add support for other stuff later
-            this.value=String.valueOf(Integer.valueOf(value)*integer.valueof(addend.get_value()));
-        }
+        return new Scalar(value*multiplicand.get_value());
     }
-    public void multi(int multiplicand)//for deriving
+    public Scalar multi(int multiplicand)//for deriving
     {
-        if (value.contains(".") ){
-            this.value=String.valueOf(Double.valueOf(value)*(Double)multiplicand);
-        } else { //add support for other stuff later
-            this.value=String.valueOf(Integer.valueOf(value)*multiplicand);
-        }
+        return new Scalar(value*Double.valueOf(multiplicand));
     }
-    public void pow(int exponent)
+    public Scalar pow(int exponent)
     {
-        this.value;
+        return new Scalar(Math.pow(value,exponent));
     }
-
-    public void neg()
+      public Scalar neg()
     {
-        this.value*=-1;
+        return new Scalar(value*(-1.0));
     }
 
-    public void equals(Scalar comparator);
+    public boolean equals(Scalar comparator)
+    {
+      if (this.value==comparator.get_value())
+         return true;
+      else
+         return false;
+    }
 
 
-    public string get_value(){
+public double get_value(){
         return value;
     }
 
-    private void convert(string );
 
-    private string value;//split into reducible and irriducible components
-    private string fractional_component;
-    private string irriducible_component;
+    private double value;//split into reducible and irriducible components
     //private ScalarTypes scalarType;    
-    
+    public static void main(String [] args){
+      Scalar test_1= new Scalar(1);
+      Scalar test_2= new Scalar(3.5);
+      Scalar test_3= test_1.add(test_2);
+      Scalar test_4= test_1.multi(test_3);
+      System.out.format("scalar test_1: %f scalar test_2: %f scalar test_3: %f scalar test_4: %f\n",test_1.get_value(),test_2.get_value(),test_3.get_value(),test_4.get_value());
+    }
 }
