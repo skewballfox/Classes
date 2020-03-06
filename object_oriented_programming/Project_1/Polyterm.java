@@ -4,27 +4,19 @@ import Scalar.Scalar;
 public class Polyterm  {
     
     void add(Polyterm addend){
-        try {
-            if (this.exponent == addend.get_exponent())
-            {
-                this.coefficient+=addend.get_coefficient();
-            }else
-            {
-                System.out.println("oops");
-            }
-        } catch (Exception e) {
-            System.out.print("oops");
-        } 
-    }
+            CheckExponent(addend);
+            return new Polyterm(coefficient+addend.get_coefficient(),exponent);
+    } 
+    
 
     void multi(Polyterm multiplicand) {
-        this.coefficient*=multiplicand.get_coefficient();
-        this.exponent+=multiplicand.get_coefficient();
+             CheckExponent(addend);
+            return new Polyterm(coefficient.multi(multiplicand.get_coefficient()),exponent);
     }
 
     void pow(int new_exponent)
     {
-        this.exponent+=new_exponent;
+        return new Polyterm(coefficient.pow(new_exponent),exponent*new_exponent);
     }
 
     
@@ -41,8 +33,10 @@ public class Polyterm  {
     void derive()
     {
         if (this.exponent!=0){
-            this.coefficient*=(Double)this.exponent;
-            this.exponent-=1;
+            return new Polyterm((coefficient.multiplicand(Double.valueOf(exponent))),exponent-1);
+        }
+        else {
+            return new Polyterm((new Scalar(0)),0)
         }
     }
 
@@ -58,4 +52,9 @@ public class Polyterm  {
 
     private Scalar coefficient;
     private int exponent;
+
+    private CheckExponent(Polyterm other) Throws Exception {
+      if (exponent!=other.get_exponent())
+          throw new Exception MismatchedExponentError("the exponents for these polyterms do not match");
+    }
 }

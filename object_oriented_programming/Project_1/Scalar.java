@@ -49,6 +49,7 @@ public double get_value(){
       Scalar test_2= new Scalar(3.5);
       Scalar test_3= test_1.add(test_2);
       Scalar test_4= test_1.multi(test_3);
-      System.out.format("scalar test_1: %f scalar test_2: %f scalar test_3: %f scalar test_4: %f\n",test_1.get_value(),test_2.get_value(),test_3.get_value(),test_4.get_value());
+      Scalar test_5= test_3.neg();
+      System.out.format("scalar test_1: %f scalar test_2: %f scalar test_3: %f scalar test_4: %f scalar test_5: %f\n",test_1.get_value(),test_2.get_value(),test_3.get_value(),test_4.get_value(),test_5.get_value());
     }
 }
