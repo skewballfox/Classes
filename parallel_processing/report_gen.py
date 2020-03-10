@@ -9,6 +9,20 @@ def get_table_row(line):
     
 def get_error_percentage(real,estimate):
     return ((estimate-real)/real)
+
+def get_speedup(time_1,time_2):
+    return (time_1/time_2)
+
+def get_parallel_efficiency(time_1,time_2,number_of_cores):
+    return time_1/(number_of_cores*time_2)
+
+def make_parallel_plot(values,core_counts,color='b'):
+    figure, axes=plt.subplots()
+    axes.plot(core_counts,values)
+    axes.scatter(core_counts,values,c=color)
+    for value,core_count in zip(values,core_count):
+        axes.text(core_count,value,value)
+    return axes        
 pi_real=3.141592
     
 assignment_directory="./assignment_1/"
@@ -22,7 +36,8 @@ for line in  open(assignment_directory+report_file, 'r'):
     if line.startswith(("| 1","| 2","| 4","| 8")):
         data.append(get_table_row(line))
 
-runtime_data,pi_data=data[(len(data)//2):],data[:(len(data)//2)]
+ru
+time_data,pi_data=data[(len(data)//2):],data[:(len(data)//2)]
 serial_data,sp_pi_estimations,cc_pi_estimations={},{},{}
 n=0
 
@@ -43,6 +58,16 @@ for row in runtime_data:
     sp_runtimes[2**n]=row[0::2]
     n+=1
 
+print("\nError for serial data:\n")
+for estimation in serial_data["pi_estimation"]:
+    error=get_relative_error(pi_real,estimation)
+    print(error)
+
+for core_count in sp_pi_estimations:
+    print("\nError for core count "+str(core_count))
+    for estimation in sp_pi_estimations[core_count]:
+        error=get_relative_error(pi_real,estimation)
+        print(error)
 
 pprint(sp_runtimes)
 
