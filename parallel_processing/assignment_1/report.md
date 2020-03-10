@@ -3,7 +3,10 @@
 ## Data
 
 ### Serial Program
-
+| Serial Data   | n1      | n2       | n3       |
+|---------------|---------|----------|----------|
+| Pi Estimation | 3.14356 | 3.141867 | 3.141596 |
+| Runtime       | 2.0     | 10.0     | 94.0     |
 ### MPI Programs
 
 #### generated estimation of Pi
