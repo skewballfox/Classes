@@ -6,7 +6,10 @@ public class Scalar {
     {  
         value=input;
     }
-
+    Scalar(String input)
+    {
+        value=Double.valueOf(input);
+    }
     public Scalar add(Scalar addend){
         return new Scalar(value+addend.get_value());
     }

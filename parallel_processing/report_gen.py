@@ -18,11 +18,12 @@ def get_parallel_efficiency(time_1,time_2,number_of_cores):
 
 def make_parallel_plot(values,core_counts,color='b'):
     figure, axes=plt.subplots()
-    axes.plot(core_counts,values)
+    axes.plot(core_counts,values,color)
     axes.scatter(core_counts,values,c=color)
     for value,core_count in zip(values,core_count):
         axes.text(core_count,value,value)
-    return axes        
+    return axes
+
 pi_real=3.141592
     
 assignment_directory="./assignment_1/"
