@@ -29,7 +29,9 @@ public class Polyterm  {
         }//at this point all possible coefficients are accounted for
         if (input.contains("^"))
         {
-            exponent=Integer.valueOf(input.split("x^")[-1]);
+            String [] input_array=input.split("\\^");//because negative indexing isn't allowed, and this is a regex, not a string
+            System.out.println(input_array[input_array.length-1]);
+            exponent=Integer.valueOf(input_array[input_array.length-1]);
             return;
         }
         else
@@ -46,7 +48,7 @@ public class Polyterm  {
     
 
     public Polyterm multi(Polyterm multiplicand) {
-             CheckExponent(multiplicand);
+            CheckExponent(multiplicand);
             return new Polyterm(coefficient.multi(multiplicand.get_coefficient()),exponent);
     }
 
@@ -85,7 +87,23 @@ public class Polyterm  {
     {
         return coefficient;
     }
-
+    public Scalar evaluate(Scalar multiplicand)
+    {
+        return coefficient.multi(multiplicand.pow(exponent));
+    }
+    public String toString()
+    {
+        String display="";
+        if (coefficient.get_value()!=1.0 || exponent == 0){//this should include a 1 constant value (ie exponent 0)
+            display+=coefficient.toString();
+        }
+        if (exponent>1){
+            display+="x^"+String.valueOf(exponent);
+        }else if (exponent == 1){
+            display+="x";
+        }//if exponent=0 you are already done
+        return display;
+    }
     private Scalar coefficient;
     private int exponent;
 
@@ -95,11 +113,11 @@ public class Polyterm  {
     }
     public static void main(String [] args)
     {
-        String[] input_test={"7","7x","7x^2","x^2","x"};
+        String[] input_test={"7","7x","7x^2","x^2","x","1"};
         for (String input : input_test)
         {
-            Polyterm temp=new Polyterm(input);
-            System.out.println(temp.get_coefficient()+" "+temp.get_exponent());
+            Polyterm temp = new Polyterm(input);
+            System.out.println("this Polyterm is: "+temp.toString());
         }
     }
 }

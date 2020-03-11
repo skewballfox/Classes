@@ -40,10 +40,13 @@ public class Scalar {
     }
 
 
-public double get_value(){
+    public double get_value(){
         return value;
     }
-
+    public String toString()
+    {
+        return String.valueOf(value);
+    }
 
     private double value;//split into reducible and irriducible components
     //private ScalarTypes scalarType;    
