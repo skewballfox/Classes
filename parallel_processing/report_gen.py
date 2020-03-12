@@ -24,52 +24,61 @@ def make_parallel_plot(values,core_counts,color='b'):
         axes.text(core_count,value,value)
     return axes
 
-pi_real=3.141592
+if __name__=="__main__":
+  pi_real=3.141592
     
-assignment_directory="./assignment_1/"
-report_file = "report.md"
-data_files=("n1_data.md", "n2_data.md", "n3_data.md")
+  assignment_directory="./assignment_1/"
+  report_file = "Report/report.md"
+  data_files=("n1_data.md", "n2_data.md", "n3_data.md")
 
-data=[]
+  data=[]
 
-for line in  open(assignment_directory+report_file, 'r'):
-    #print(line)
-    if line.startswith(("| 1","| 2","| 4","| 8")):
-        data.append(get_table_row(line))
+  for line in  open(assignment_directory+report_file, 'r'):
+      #print(line)
+      if line.startswith(("| 1","| 2","| 4","| 8")):
+          data.append(get_table_row(line))
 
-ru
-time_data,pi_data=data[(len(data)//2):],data[:(len(data)//2)]
-serial_data,sp_pi_estimations,cc_pi_estimations={},{},{}
-n=0
 
-for row in pi_data:
-    row.pop(0)
-    cc_pi_estimations[2**n]=row[1::2]
-    sp_pi_estimations[2**n]=row[0::2]
-    n+=1
+  runtime_data,pi_data=data[(len(data)//2):],data[:(len(data)//2)]
+  serial_data,sp_pi_estimations,cc_pi_estimations={},{},{}
+  n=0
 
-serial_data["pi_estimation"]=[3.143586,3.141867,3.141596]
-serial_data["runtime"]=[2.0,10.0,94.0]
-serial_runtimes,sp_runtimes,cc_runtimes={},{},{}
-n=0
+  for row in pi_data:
+      row.pop(0)
+      cc_pi_estimations[2**n]=row[1::2]
+      sp_pi_estimations[2**n]=row[0::2]
+      n+=1
 
-for row in runtime_data:
-    row.pop(0)
-    cc_runtimes[2**n]=row[1::2]
-    sp_runtimes[2**n]=row[0::2]
-    n+=1
+  serial_data["pi_estimation"]=[3.143586,3.141867,3.141596]
+  serial_data["runtime"]=[2.0,10.0,94.0]
+  serial_runtimes,sp_runtimes,cc_runtimes={},{},{}
+  n=0
 
-print("\nError for serial data:\n")
-for estimation in serial_data["pi_estimation"]:
-    error=get_relative_error(pi_real,estimation)
-    print(error)
+  for row in runtime_data:
+      row.pop(0)
+      cc_runtimes[2**n]=row[1::2]
+      sp_runtimes[2**n]=row[0::2]
+      n+=1
 
-for core_count in sp_pi_estimations:
-    print("\nError for core count "+str(core_count))
-    for estimation in sp_pi_estimations[core_count]:
-        error=get_relative_error(pi_real,estimation)
-        print(error)
+  print("\nError for serial data:\n")
+  for estimation in serial_data["pi_estimation"]:
+      error=get_error_percentage(pi_real,estimation)
+      print(error)
 
-pprint(sp_runtimes)
+  for core_count in sp_pi_estimations:
+      print("\nError for core count "+str(core_count))
+      for estimation in sp_pi_estimations[core_count]:
+          error=get_error_percentage(pi_real,estimation)
+          print(error)
+  for core_count in cc_runtimes:
+      n=0
+      print("\nEfficiency for core count "+str(core_count))
+      for runtime in cc_runtimes[core_count]:
+          #print(serial_data["runtime"][n])
+          #print(runtime)
+          #print(core_count)
+          print(get_parallel_efficiency(serial_data["runtime"][n],runtime,core_count))
+          n+=1
+  pprint(sp_runtimes)
 
 
