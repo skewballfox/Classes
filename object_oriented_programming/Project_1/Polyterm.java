@@ -2,7 +2,7 @@ import java.io.PrintStream;
 
 //package Project_1;
 // import Scalar;
-public class Polyterm  {
+public class Polyterm implements Comparable<Polyterm>{
     Polyterm(Scalar constant,int power){
         coefficient=constant;
         exponent=power;
@@ -43,13 +43,12 @@ public class Polyterm  {
 
     public Polyterm add(Polyterm addend){
             CheckExponent(addend);
-            return new Polyterm(coefficient.add(addend.get_coefficient()),exponent);
+            return new Polyterm(coefficient.add(addend.getCoefficient()),exponent);
     } 
     
 
     public Polyterm multi(Polyterm multiplicand) {
-            CheckExponent(multiplicand);
-            return new Polyterm(coefficient.multi(multiplicand.get_coefficient()),exponent);
+            return new Polyterm(coefficient.multi(multiplicand.getCoefficient()),exponent+multiplicand.getExponent());
     }
 
     public Polyterm pow(int new_exponent)
@@ -61,7 +60,7 @@ public class Polyterm  {
 
     public boolean equals(Polyterm comparator)
     {
-        if (this.coefficient==comparator.get_coefficient() && this.exponent==comparator.get_exponent()){
+        if (this.coefficient==comparator.getCoefficient() && this.exponent==comparator.getExponent()){
             return true;
         } else {
             return false;
@@ -78,12 +77,12 @@ public class Polyterm  {
         }
     }
 
-    public int get_exponent()
+    public int getExponent()
     {
         return exponent;
     }
     
-    public Scalar get_coefficient()
+    public Scalar getCoefficient()
     {
         return coefficient;
     }
@@ -104,13 +103,23 @@ public class Polyterm  {
         }//if exponent=0 you are already done
         return display;
     }
+
+    @Override
+    public int compareTo(Polyterm other)
+    {
+        return this.exponent.compareTo(other.getExponent());
+    }
+
+    
     private Scalar coefficient;
-    private int exponent;
+    private Integer exponent;
 
     private void CheckExponent(Polyterm other) throws ArithmeticException {
-      if (exponent!=other.get_exponent())
+      if (exponent!=other.getExponent())
           throw new ArithmeticException("the exponents for these polyterms do not match");
     }
+
+        
     public static void main(String [] args)
     {
         String[] input_test={"7","7x","7x^2","x^2","x","1"};
