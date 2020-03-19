@@ -30,7 +30,6 @@ public class Polyterm implements Comparable<Polyterm>{
         if (input.contains("^"))
         {
             String [] input_array=input.split("\\^");//because negative indexing isn't allowed, and this is a regex, not a string
-            System.out.println(input_array[input_array.length-1]);
             exponent=Integer.valueOf(input_array[input_array.length-1]);
             return;
         }
@@ -56,14 +55,21 @@ public class Polyterm implements Comparable<Polyterm>{
         return new Polyterm(coefficient.pow(new_exponent),exponent*new_exponent);
     }
 
-    
-
-    public boolean equals(Polyterm comparator)
+    @Override
+    public boolean equals(Object comparator)
     {
-        if (this.coefficient==comparator.getCoefficient() && this.exponent==comparator.getExponent()){
+        if (this == comparator)
             return true;
-        } else {
+        else if (comparator == null || getClass()!=comparator.getClass())
             return false;
+        else{
+            Polyterm other=(Polyterm) comparator;
+            System.out.println(this.toString()+" "+other.toString());
+            if (this.coefficient==other.getCoefficient() && this.exponent==other.getExponent()){
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -88,7 +94,10 @@ public class Polyterm implements Comparable<Polyterm>{
     }
     public Scalar evaluate(Scalar multiplicand)
     {
-        return coefficient.multi(multiplicand.pow(exponent));
+        if (exponent!=0)
+            return coefficient.multi(multiplicand.pow(exponent));
+        else
+            return coefficient;
     }
     public String toString()
     {

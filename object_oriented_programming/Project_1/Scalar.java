@@ -1,14 +1,19 @@
-
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 //public enum Scalar_types{integer, decimal, fraction, irrational};
 public class Scalar {
+
     Scalar(double input)
     {  
         value=input;
     }
-    Scalar(String input)
+    Scalar(String input) throws ArithmeticException
     {
-        value=Double.valueOf(input);
+        if (input.matches(inputTest))
+            value=Double.valueOf(input);
+        else
+            throw new ArithmeticException("ERROR: "+input+" is not a valid scalar");
     }
     public Scalar add(Scalar addend){
         return new Scalar(value+addend.get_value());
@@ -49,6 +54,7 @@ public class Scalar {
     }
 
     private double value;//split into reducible and irriducible components
+    private static String inputTest = "^-?((\\d+)|(\\d+\\.\\d*)|(\\d*\\.\\d+))$";
     //private ScalarTypes scalarType;    
     public static void main(String [] args){
       Scalar test_1= new Scalar(1);
