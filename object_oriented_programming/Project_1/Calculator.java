@@ -9,79 +9,67 @@ public class Calculator {
     Calculator(){
         Operation Op;
         while(true){
-          promptOp();
-          Op=getOp();
-          if ( Op.ordinal() == 0 || Op.ordinal() == 1 ){
-              firstPolynomial=getPolynomial("first ");
-              secondInput=getPolynomial("second ");
-          } else if (Op.ordinal() == 2){
-              firstPolynomial=getPolynomial("");
-              secondInput=getScalar();
-          } else if (Op.ordinal() == 3 ){
-              firstPolynomial=getPolynomial("");
-          } else {
-              System.exit(0);
-          }
+          Op=promptOp();
           result=getResult(Op);
           printResult();
           
         }
        
     }
-    public void promptOp(){
-        System.out.println("Please select an operation:\n");
-        System.out.println("\t\t1.Addition");
-        System.out.println("\t\t2.Multiplication");
-        System.out.println("\t\t3.Evaluation");
-        System.out.println("\t\t4.Derivative");
-        System.out.println("\t\t5.Exit");
-    }
-    public Operation getOp(){
+    public Operation promptOp(){
         String input;
-        do{            
-            input = prompt.nextLine();
+        do {//keep looping until you get a valid response
 
-            if ("12345".contains(input) && input.length() == 1)
-                return Operation.values()[Integer.valueOf(input)-1];
-            else
-            {
-                for (Operation op : Operation.values())
-                {
-                    if (op.name().equals(input.toLowerCase()))
-                        return op;
-                }//if you made it this far it is neither a valid digit nor operation
-                System.out.println("that response was not valid, please try again.\n");
-            }
-        }while(true);
-    }
-
-    public Polynomial getPolynomial(String specifier){
-        String input;
-        do{
-            System.out.println("Please enter the "+specifier+"Polynomial");
+                System.out.println("Please select an operation:\n");
+                System.out.println("\t\t1.Addition");
+                System.out.println("\t\t2.Multiplication");
+                System.out.println("\t\t3.Evaluation");
+                System.out.println("\t\t4.Derivative");
+                System.out.println("\t\t5.Exit");
             try{
-                input=prompt.nextLine();
-                return new Polynomial(input);
-            } catch (Exception ArithmeticException){
-                System.out.println("Not a valid polynomial, Please try again\n");
+                input = prompt.nextLine();
+               return setOp(input);
+            } catch(IllegalArgumentException e){
+              System.out.println("invalid response please try again");
             }
-                
-        }while(true);
+        } while (true);
     }
-    public Scalar getScalar()
-    {
-        String input;
-        while(true)
+    
+    public Operation setOp(String input) throws IllegalArgumentException {
+           
+        if ("12345".contains(input) && input.length() == 1)
+            return Operation.values()[Integer.valueOf(input)-1];
+        else
         {
-            System.out.println("Please enter a scalar to be used for evalutation");
-            try{
-                input=prompt.nextLine();
-                return new Scalar(input);
-            }catch (Exception ArithmeticException){
-                System.out.println("Not a valid Scalar, Please try again\n");
-            }
+            for (Operation op : Operation.values())
+            {
+                if (op.name().equals(input.toLowerCase()))
+                    return op;
+            }//if you made it this far it is neither a valid digit nor operation
+            throw new IllegalArgumentException("Invalid response, please try again");
         }
+        
     }
+    public void promptValues(Operation Op){
+          if ( Op.ordinal() == 0 || Op.ordinal() == 1 ){
+              System.out.println("Please enter the first polynomial");
+              murpheysInput("first");
+              System.out.println("Please enter the second polynomial");
+              murpheysInput("polynomial");
+          } else if (Op.ordinal() == 2){
+              System.out.println("Please enter the polynomial to evaluate");
+              murpheysInput("first");
+              System.out.println("Please enter the value for x");
+              murpheysInput("scalar");
+          } else if (Op.ordinal() == 3 ){
+              System.out.println("Please enter the polynomial to derive");
+              murpheysInput("first");
+          } else {
+              System.exit(0);
+          }
+    }
+               
+       
     public Object getResult(Operation Op){
         //no idea if this will work
         switch(Op){
@@ -96,6 +84,7 @@ public class Calculator {
         }
         return result;
     }
+
     public void printResult()
     {
 
@@ -108,7 +97,29 @@ public class Calculator {
         }
     }
 
+    private void murpheysInput(String input_type)
+    {
+        String input;
+        boolean valid=false;
+        do {
+            try{
+                input=prompt.nextLine();
 
+                if (input_type=="first") {
+                    firstPolynomial = new Polynomial(input);
+                } else if (input_type=="polynomial") {
+                    secondInput = new Polynomial(input);
+                } else {
+                    secondInput = new Scalar(input);
+                }
+                valid=true;
+ 
+            } catch (Exception ArithmeticException){
+                System.out.println("your input was invalid, Please try again\n");
+            }
+        }while(!valid);
+
+    }
     private Scanner prompt= new Scanner(System.in);
     //may switch this out with a list to add history later
     private Polynomial firstPolynomial;

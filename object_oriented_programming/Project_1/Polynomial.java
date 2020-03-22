@@ -5,9 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 public class Polynomial
-{ //Note I'm probably going to rewrite tomorrow after the test
-  //using either a linked list or an arraylist. Sorted Set is
-  //just not a good fit for this problem
+{ 
   public Polynomial(ArrayList<Polyterm> polylist)
   {
       Polyterms=polylist;
@@ -44,19 +42,23 @@ public class Polynomial
       //NOTE: the only reason I went with this was because the contains method
       //uses o.equals(a), not o.compareto(a), and equality has to be for both
       //coefficient and expoenent.
+      Polyterm thisTerm = (Polyterm)thisIter.next();
+      Polyterm thatTerm = (Polyterm)thatIter.next();
       do{//iterate through both list at once, using exponent as comparator
           if (thisIter.hasNext() && thatIter.hasNext())
           {//if both have stuff left compare the values, add values with same exponent
-              Polyterm thisTerm = (Polyterm)thisIter.next();
-              Polyterm thatTerm = (Polyterm)thatIter.next();
 
-              if (thisTerm.compareTo(thatTerm)==-1)
+              if (thisTerm.compareTo(thatTerm)==-1) {
                   tempPolyterms.add(thisTerm);
-              else if (thisTerm.compareTo(thatTerm)==1)
+                  thisTerm=thisIter.next();
+              } else if (thisTerm.compareTo(thatTerm)==1) {
                   tempPolyterms.add(thatTerm);
-              else
-                  tempPolyterms.add((thisTerm).add(thatTerm));                  
-      
+                  thatTerm=thatIter.next();
+              } else {
+                  tempPolyterms.add((thisTerm).add(thatTerm));
+                  thisTerm=thisIter.next();
+                  thatTerm=thatIter.next();                
+              }
           }
           else if (!thisIter.hasNext() && !thatIter.hasNext())
           {//if both are empy
@@ -136,6 +138,14 @@ public class Polynomial
       Polynomial test2=new Polynomial("-7x+4x^2+8.3x^3");
       System.out.println("test equals: "+String.valueOf(test1.equals(test2)));
       Polynomial test3=new Polynomial("1-7x+4x^2+8.3x^3");
+      Polynomial test4=new Polynomial("1+4x^2");//this motherfucker
+      Polynomial test5=new Polynomial("1-7x");//that motherfucker
+      Polynomial test6=new Polynomial("1-7x+4x^2+8.3x^3+x^4");
+      Polynomial test7=new Polynomial("1-7x+4x^2+8.3x^3");
+      Polynomial test8=new Polynomial("1-7x+4x^2+8.3x^3");
+      Polynomial test9=new Polynomial("1-7x+4x^2+8.3x^3");
+      Polynomial test10=new Polynomial("1-7x+4x^2+8.3x^3");
+      
       System.out.println("yeet");
       test1=test1.add(test2);
 
@@ -146,6 +156,10 @@ public class Polynomial
       temp=test2.evaluate(temp);
       System.out.println(temp.toString());
       System.out.println("test4: "+(test2.evaluate(temp)).toString());
-      
+      System.out.println("those motherfuckers "+(test4.add(test5)).toString());//yep
+      System.out.println("test6: "+(test4.add(test4)).toString());
+      System.out.println("test7: "+(test5.add(test6)).toString());
+
+      System.out.println("test4: "+(test2.evaluate(temp)).toString());      
   }
 }
