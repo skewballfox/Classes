@@ -65,7 +65,7 @@ public class Polyterm implements Comparable<Polyterm>{
         else{
             Polyterm other=(Polyterm) comparator;
             System.out.println(this.toString()+" "+other.toString());
-            if (this.coefficient==other.getCoefficient() && this.exponent==other.getExponent()){
+            if (Math.abs(this.coefficient.getValue()-other.getCoefficient().getValue())<threshhold && this.exponent==other.getExponent()){
                 return true;
             } else {
                 return false;
@@ -102,7 +102,7 @@ public class Polyterm implements Comparable<Polyterm>{
     public String toString()
     {
         String display="";
-        if (coefficient.get_value()!=1.0 || exponent == 0){//this should include a 1 constant value (ie exponent 0)
+        if (coefficient.getValue()!=1.0 || exponent == 0){//this should include a 1 constant value (ie exponent 0)
             display+=coefficient.toString();
         }
         if (exponent>1){
@@ -119,7 +119,7 @@ public class Polyterm implements Comparable<Polyterm>{
         return this.exponent.compareTo(other.getExponent());
     }
 
-    
+    private final double threshhold=.0001;
     private Scalar coefficient;
     private Integer exponent;
 

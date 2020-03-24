@@ -10,6 +10,7 @@ public class Calculator {
         Operation Op;
         while(true){
           Op=promptOp();
+          promptValues(Op);
           result=getResult(Op);
           printResult();
           

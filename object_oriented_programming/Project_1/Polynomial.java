@@ -30,10 +30,13 @@ public class Polynomial
                throw new ArithmeticException("ERROR: "+polystring+" is Not a valid Polynomial");
            }
         }
+        Polyterms.sort(null);
+
     }
 
 
   public Polynomial add(Polynomial addend)
+  
   {
       ArrayList<Polyterm> tempPolyterms = new ArrayList<Polyterm>();
       Iterator<Polyterm> thisIter = Polyterms.iterator();
@@ -44,36 +47,52 @@ public class Polynomial
       //coefficient and expoenent.
       Polyterm thisTerm = (Polyterm)thisIter.next();
       Polyterm thatTerm = (Polyterm)thatIter.next();
+System.out.println("Polyterm");
+System.out.println(thisTerm.toString());
+      //I tried inverting the nested conditionals to make the code more condensed,
+      //and I ran into an issue with certain values being skipped over
       do{//iterate through both list at once, using exponent as comparator
-          if (thisIter.hasNext() && thatIter.hasNext())
-          {//if both have stuff left compare the values, add values with same exponent
+      
+          if (thisTerm.compareTo(thatTerm)==-1) {
 
-              if (thisTerm.compareTo(thatTerm)==-1) {
-                  tempPolyterms.add(thisTerm);
-                  thisTerm=thisIter.next();
-              } else if (thisTerm.compareTo(thatTerm)==1) {
-                  tempPolyterms.add(thatTerm);
-                  thatTerm=thatIter.next();
+              tempPolyterms.add(thisTerm);
+
+              if (thisIter.hasNext())
+                  thisTerm=(Polyterm)thisIter.next();
+              else {
+                  tempPolyterms.add((Polyterm)thatTerm);
+                  thatIter.forEachRemaining((term) -> tempPolyterms.add((Polyterm)term));
+                  done=true;
+              }
+
+          } else if (thisTerm.compareTo(thatTerm)==1) {
+
+              tempPolyterms.add(thatTerm);
+
+              if (thatIter.hasNext())
+                  thatTerm=(Polyterm)thatIter.next();
+              else{
+                  tempPolyterms.add((Polyterm)thisTerm);
+                  thisIter.forEachRemaining((term) -> tempPolyterms.add((Polyterm)term));
+                  done=true;
+              }
+
+          } else {//both are equal
+              tempPolyterms.add((thisTerm).add(thatTerm));
+
+              if (thisIter.hasNext() && thatIter.hasNext()) {
+                  thisTerm=(Polyterm)thisIter.next();
+                  thatTerm=(Polyterm)thatIter.next();
+              } else if (thisIter.hasNext()){
+                  thisIter.forEachRemaining((term) -> tempPolyterms.add((Polyterm)term));   
+                  done=true;
+              } else if (thatIter.hasNext()) {
+                  thatIter.forEachRemaining((term) -> tempPolyterms.add((Polyterm)term));   
+                  done=true;                      
               } else {
-                  tempPolyterms.add((thisTerm).add(thatTerm));
-                  thisTerm=thisIter.next();
-                  thatTerm=thatIter.next();                
+                  done=true;
               }
           }
-          else if (!thisIter.hasNext() && !thatIter.hasNext())
-          {//if both are empy
-              done=true;
-          }//next two cases work because if one list is empty then all remaining exponents are larger
-          else if (thisIter.hasNext())
-          {
-              thisIter.forEachRemaining((term) -> tempPolyterms.add(term));   
-              done=true;
-          }
-          else
-          {
-              thatIter.forEachRemaining(term -> tempPolyterms.add(term));
-              done=true;
-          }     
       } while (!done);//on the plus side this is already sorted
       return new Polynomial(tempPolyterms);
   }
@@ -138,8 +157,8 @@ public class Polynomial
       Polynomial test2=new Polynomial("-7x+4x^2+8.3x^3");
       System.out.println("test equals: "+String.valueOf(test1.equals(test2)));
       Polynomial test3=new Polynomial("1-7x+4x^2+8.3x^3");
-      Polynomial test4=new Polynomial("1+4x^2");//this motherfucker
-      Polynomial test5=new Polynomial("1-7x");//that motherfucker
+      Polynomial test4=new Polynomial("1+4x^2");
+      Polynomial test5=new Polynomial("1-7x");
       Polynomial test6=new Polynomial("1-7x+4x^2+8.3x^3+x^4");
       Polynomial test7=new Polynomial("1-7x+4x^2+8.3x^3");
       Polynomial test8=new Polynomial("1-7x+4x^2+8.3x^3");
@@ -156,7 +175,7 @@ public class Polynomial
       temp=test2.evaluate(temp);
       System.out.println(temp.toString());
       System.out.println("test4: "+(test2.evaluate(temp)).toString());
-      System.out.println("those motherfuckers "+(test4.add(test5)).toString());//yep
+      System.out.println((test4.add(test5)).toString());//yep
       System.out.println("test6: "+(test4.add(test4)).toString());
       System.out.println("test7: "+(test5.add(test6)).toString());
 
