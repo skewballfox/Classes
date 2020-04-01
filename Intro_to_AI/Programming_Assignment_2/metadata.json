@@ -1,0 +1,9 @@
+{
+    "data_shape":28,
+    "training_data" : "digitdata/trainingimages",
+    "training_labels" : "digitdata/traininglabels",
+    "training_sample_size": 5000,
+    "test_data" : "digitdata/testimages",
+    "test_labels" : "digitdata/testlabels",
+    "test_sample_size" : 1000
+}

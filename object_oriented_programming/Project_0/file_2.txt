@@ -1,9 +1,0 @@
-It seems like API gateways are an easy choice based on the benefits, but there are drawbacks.
-
-As with any addition to your stack, API Gateways introduces another piece to manage. They need to be hosted, scaled and managed just like the rest of your software. Since all requests and responses must pass through the gateway, they add an additional point of failure and increase the latency of each call by adding a few extra "hops" across the network.
-
-Due to their centralized location, it becomes easy to gradually increase the complexity inside the gateway until it becomes a "black box" of code. This makes maintaining the code harder.
-
-This "put it all together" approach goes against the core idea of using microservices to split an application up into smaller parts and removes some of their autonomy.
-
-These problems are mostly avoidable, but it takes a bit of work.
