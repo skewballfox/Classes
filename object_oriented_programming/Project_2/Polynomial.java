@@ -42,13 +42,13 @@ public class Polynomial
       Iterator<Polyterm> thisIter = Polyterms.iterator();
       Iterator<Polyterm> thatIter = addend.getPolyterms().iterator();
       boolean done=false;
+
       //NOTE: the only reason I went with this was because the contains method
       //uses o.equals(a), not o.compareto(a), and equality has to be for both
       //coefficient and expoenent.
       Polyterm thisTerm = (Polyterm)thisIter.next();
       Polyterm thatTerm = (Polyterm)thatIter.next();
-System.out.println("Polyterm");
-System.out.println(thisTerm.toString());
+      
       //I tried inverting the nested conditionals to make the code more condensed,
       //and I ran into an issue with certain values being skipped over
       do{//iterate through both list at once, using exponent as comparator
@@ -121,7 +121,7 @@ System.out.println(thisTerm.toString());
   public Scalar evaluate(Scalar multiplicand)
   {
       
-      Scalar result = new Scalar(0);
+      Scalar result = SF.newScalar(0);
       for (Polyterm term : Polyterms){
           result=result.add(term.evaluate(multiplicand));
       }
@@ -140,17 +140,20 @@ System.out.println(thisTerm.toString());
       for (Polyterm polytemp : Polyterms){
           output+="+"+polytemp.toString();
       }
+      output=output.substring(1);
       output=output.replaceAll("\\+\\-","\\-");
 
       return output;
   }
   private ArrayList<Polyterm> Polyterms = new ArrayList<Polyterm>();
+  private final ScalarFactory SF= new ScalarFactory();
 
   // below can be used to test input
-  private static String in_test = "^-?(?:(\\d+)|(\\d+\\.\\d*)|(\\d*\\.\\d+))?(x|(x\\^(?=\\d+)\\d+))?$";
+  private static String in_test = "^-?(?:(\\d+)|(\\d+\\/\\d+)|(\\d+\\.\\d*)|(\\d*\\.\\d+))?(x|(x\\^(?=\\d+)\\d+))?$";
   //Note: this fat rail of regex took me over an hour
   public static void main(String [] args)
   {
+      ScalarFactory SF =new ScalarFactory();
       System.out.println("test1");
       Polynomial test1=new Polynomial("-7x+4x^2+8.3x^3");
       System.out.println("test2");
@@ -158,20 +161,19 @@ System.out.println(thisTerm.toString());
       System.out.println("test equals: "+String.valueOf(test1.equals(test2)));
       Polynomial test3=new Polynomial("1-7x+4x^2+8.3x^3");
       Polynomial test4=new Polynomial("1+4x^2");
-      Polynomial test5=new Polynomial("1-7x");
-      Polynomial test6=new Polynomial("1-7x+4x^2+8.3x^3+x^4");
-      Polynomial test7=new Polynomial("1-7x+4x^2+8.3x^3");
+      Polynomial test5=new Polynomial("1-7x+3/7x^9");
+      Polynomial test6=new Polynomial("1-7x+4x^2+8.3x^3+x^4+1/2x^9");
+      Polynomial test7=new Polynomial("1/2-7/3x+4x^2+8.3x^3");
       Polynomial test8=new Polynomial("1-7x+4x^2+8.3x^3");
       Polynomial test9=new Polynomial("1-7x+4x^2+8.3x^3");
       Polynomial test10=new Polynomial("1-7x+4x^2+8.3x^3");
       
-      System.out.println("yeet");
       test1=test1.add(test2);
 
       System.out.println("test1: "+test1.toString());
       test3=test3.derivative();
       System.out.println("test3: "+test2.toString());
-      Scalar temp= new Scalar(4);
+      Scalar temp= SF.newScalar(4);
       temp=test2.evaluate(temp);
       System.out.println(temp.toString());
       System.out.println("test4: "+(test2.evaluate(temp)).toString());

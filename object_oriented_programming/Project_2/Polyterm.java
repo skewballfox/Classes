@@ -15,7 +15,7 @@ public class Polyterm implements Comparable<Polyterm>{
         //and x^\d is in 2 possible options, so a process of elimation works best 
         if (!input.contains("x"))//meaning 7
         {
-            coefficient = newScalar(input);
+            coefficient = SF.newScalar(input);
             exponent = 0;
             return;
         }
@@ -26,15 +26,15 @@ public class Polyterm implements Comparable<Polyterm>{
         else
         {
             coefficient= ScalarFactory.newScalar(input.split("x")[0]);  
-        }//at this point all possible coefficients are accounted for
-        if (input.contains("^"))
-        {
+        }
+
+        //at this point all possible coefficients are accounted for
+        if (input.contains("^")) {
             String [] input_array=input.split("\\^");//because negative indexing isn't allowed, and this is a regex, not a string
             exponent=Integer.valueOf(input_array[input_array.length-1]);
             return;
-        }
-        else
-        {
+            
+        } else {
             exponent = 1;
             return;
         }
@@ -102,7 +102,7 @@ public class Polyterm implements Comparable<Polyterm>{
     public String toString()
     {
         String display="";
-        if (coefficient.getValue()!=1.0 || exponent == 0){//this should include a 1 constant value (ie exponent 0)
+        if (coefficient.toString()!="1" || exponent == 0){//this should include a 1 constant value (ie exponent 0)
             display+=coefficient.toString();
         }
         if (exponent>1){

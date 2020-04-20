@@ -111,7 +111,7 @@ public class Calculator {
                 } else if (input_type=="polynomial") {
                     secondInput = new Polynomial(input);
                 } else {
-                    secondInput = new Scalar(input);
+                    secondInput = SF.newScalar(input);
                 }
                 valid=true;
  
@@ -126,6 +126,7 @@ public class Calculator {
     private Polynomial firstPolynomial;
     private Object secondInput;//could be poly or scalar
     private Object result;
+    private final ScalarFactory SF = new ScalarFactory();
     private static enum Operation{
         addition,
         multiplication,

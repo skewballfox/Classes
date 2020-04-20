@@ -91,7 +91,7 @@ public class RationalScalar implements Scalar {
     }
     private int gcd(int a,int b){
      if (b==0)
-         return a;
+         return Math.abs(a);
      else
         return gcd(b,a%b); 
     }
@@ -113,6 +113,6 @@ public class RationalScalar implements Scalar {
       Scalar test_3= test_1.add(test_2);
       Scalar test_4= test_1.multi(test_3);
       Scalar test_5= test_3.neg();
-      System.out.format("scalar test_1: %f scalar test_2: %f scalar test_3: %f scalar test_4: %f scalar test_5: %f\n",test_1.toString(),test_2.toString(),test_3.toString(),test_4.toString(),test_5.toString());
+      System.out.format("scalar test_1: %s scalar test_2: %s scalar test_3: %s scalar test_4: %s scalar test_5: %s\n",test_1.toString(),test_2.toString(),test_3.toString(),test_4.toString(),test_5.toString());
     }
 }
