@@ -1,99 +1,149 @@
-import java.util.HashMap;
-public class NTilePuzzle.java {
+import java.io.File;
+import java.nio.file.Files;
+import java.io.IOException;
+import java.util.ArrayList;
+public class NTilePuzzle implements Puzzle{
     private int moveCount;
     private int boardLength;
     private int[][] Board;
-    
-    private int emptyTileRow,emptyTileColumn;
-    private boolean terminalState;
 
-    private Set<String> AvailableMoves;
-    NTilePuzzle(String configName){
-        
+    private ArrayList<String> availableMoves=new ArrayList<String>();
+    private int emptyTileRow,emptyTileColumn;
+    private String spacer;
+    
+    public NTilePuzzle(String configName) throws IllegalArgumentException {
+        ArrayList<Integer> temp = new ArrayList<Integer>();
+        try {
+            for (String value : Files.readString((new File(configName)).toPath()).strip().split(",")) {
+                try {
+                    temp.add(Integer.valueOf(value));
+                } catch (NumberFormatException e) {
+                    System.out.println("the input file contains values which aren't numbers or commas");
+                    System.out.println(value);
+                }
+            }
+         } catch (IOException e) {
+             System.out.println("An I/O exception has occured, please try again");
+        }         
+        double squareRoot= Math.sqrt(temp.size());
+        boardLength =(int) Math.floor(squareRoot);
+        if ((squareRoot - boardLength)>.0001)
+            throw new IllegalArgumentException("the number of tiles need to be a perfect square");
+        Board=new int[boardLength][boardLength];
+        for (int row=0; row < boardLength; row++){
+            for (int column=0; column < boardLength; column++) {
+                Board[row][column] = temp.get(column+(boardLength*row));
+                if (Board[row][column] == 0){
+                    emptyTileRow=row;
+                    emptyTileColumn=column;
+                }
+                    
+            }
+        }
+        updateAvailableMoves();
     }
 
-    public Playermove(char direction) throws IllegalArgumentException {
-        /*
-        swaps the values at two locations
-        expected input
-        w or k: up
-        a or h: left
-        d or l: right
-        s or j: down
-        */
-        if (!AvailableMoves.contains(direction.toLower())){
+    public int getMoveCount(){
+        return moveCount;
+    }
+    public void updateGameState(String move) {
+
+        if (!availableMoves.contains(move.toLowerCase())){
             throw new IllegalArgumentException("%s is not a valid option for a move");
         }
-        if (direction == "up") {
+
+        if (move == "up") {
            swapEmptyTile(emptyTileRow-1,emptyTileColumn);
         }
-        if (direction == "left") {
+        if (move == "left") {
            swapEmptyTile(emptyTileRow,emptyTileColumn-1); 
         }
-        if (direction == "right") {
-            swapEmptyTile(emptyTileRow,emptyTileColumn+1)
+        if (move == "right") {
+            swapEmptyTile(emptyTileRow,emptyTileColumn+1);
         }
-        if (direction == "down") {
-            swapEmptyTile(emptyTileRow+1,emptyTileColumn)
+        if (move == "down") {
+            swapEmptyTile(emptyTileRow+1,emptyTileColumn);
         }
         moveCount+=1;
-        checkState();
-        if (terminalState==false){
-            updateAvailableMoves();
-        }
+        updateAvailableMoves();
         
     }
-    private updateState(){
+    public boolean checkTerminalState(){
         if ((emptyTileRow==0 && emptyTileColumn==0) ||
-            (emptyTileRow==boardLength && emptyTileColumn==boardLength) {
+            (emptyTileRow==boardLength-1 && emptyTileColumn==boardLength-1)) {
 
-            boolean sequentialCheck=true;
-            int prev=Board[0][0];
-            for (int row=0;row<boardLength;row++){
-                for (int column=0;column<boardLength;column++){
-                    if ((row==0 && column==0)||
-                        (row==boardLength&&column==boardLength))
-                        continue;
-                    if (Board[row][column]!=prev++){
-                        sequentialCheck=false;
-                        break;
+                int prev=Board[0][0];
+                for (int row=0;row<boardLength;row++){
+                    for (int column=0;column<boardLength;column++){
+                        if ((row==0 && column==0)||
+                            (row==boardLength-1&&column==boardLength-1))
+                            continue;//if all previous elements checked last element is in order
+                        else if (Board[row][column]!=++prev){//only works if sequence
+                            return false;
                     }
                 }
             }
-            if (sequentialCheck==true){
-                terminalState=true;
-            }
-        }
+            return true;
+        } else
+            return false;
+            
     }
-    private swapEmptyTile(row,column){
-        Board[emptyTileRow][emptyTileColumn]=Board[row][Column];
+    private void swapEmptyTile(int row,int column){
+        Board[emptyTileRow][emptyTileColumn]=Board[row][column];
         Board[row][column]=0;
         emptyTileRow=row;
         emptyTileColumn=column;
     }
-    private updateAvailableMoves() {
-    /*
-    This mainly exist because game logic shouldn't
-    be controlled in the interface
-    */
-        if (emptyTileRow!=1)
-            AvailableMoves.add("up");
-        else
-            AvailableMoves.remove("up");
+    public ArrayList<String> getAvailableMoves(){
+        return availableMoves;
+    }
 
-        if (emptyTileColumn!=1)
-            AvailableMoves.add("left");
-        else
-            AvailableMoves.remove("left");
+    private void updateAvailableMoves() {
+        
+        availableMoves.clear();
+        if (emptyTileRow!=0)
+            availableMoves.add("up");
 
-        if (emptyTileColumn!=n)
-            AvailableMoves.add("right");
-        else
-            AvailableMoves.remove("right");
+        if (emptyTileColumn!=0)
+            availableMoves.add("left");
 
-        if (emptyTileRow!=n)
-            AvailableMoves.add("down")
-        else
-            AvailableMoves.remove("down")
+        if (emptyTileColumn!=boardLength-1)
+            availableMoves.add("right");
+        
+
+        if (emptyTileRow!=boardLength-1)
+            availableMoves.add("down");
+    }
+
+    public String gameStateToString(){
+        String GameState="";
+        int rowLength;
+        for (int row=0;row<boardLength; row++) {
+            GameState+="\n| ";
+            for (int column=0;column<boardLength; column++){
+                if (boardLength>3 && Board[row][column]<10)
+                    GameState+=" ";
+                if (Board[row][column]!=0)
+                    GameState+=String.valueOf(Board[row][column])+" | ";
+                else
+                    GameState+="  | ";
+            }
+            if (String.valueOf(spacer)=="null"){
+                spacer="\n"+"-".repeat(GameState.length()-2);
+            }
+            GameState+=spacer;
+        }
+    return spacer+GameState;
+    }
+    public static void main(String [] args){
+        NTilePuzzle testPuzzle=new NTilePuzzle("eightpuzzle_1.txt");
+        //test toString
+        System.out.println(testPuzzle.gameStateToString());
+        //test moves
+        for (String move: testPuzzle.getAvailableMoves())
+            System.out.println(move);
+        if ((new NTilePuzzle("test_puzzle.txt")).checkTerminalState()==true)
+            System.out.println("it works");
+
     }
 }
