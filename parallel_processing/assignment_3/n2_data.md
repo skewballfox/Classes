@@ -1,22 +1,24 @@
-serial	--	pi: 3.141867/t--/telapsed time: 10.000000
-
-single point communicator output
+serial	--	pi: 3.142150	--	elapsed time: 13.000000
 
 
-processors: 1	--	pi 3.141753	--	elapsed time is 11.964283
-
-processors: 2	--	pi 3.141954	--	elapsed time is 6.445123
-
-processors: 4	--	pi 3.142327	--	elapsed time is 3.464270
-
-processors: 8	--	pi 3.143559	--	elapsed time is 2.002572
-
-
-
-collective communication output
+pred run
+total_toss_dividiend: 10	--	threadCount: 1	--	pi: 3.141587	--	elapsed time: 12.163910
+pred run
+total_toss_dividiend: 10	--	threadCount: 2	--	pi: 3.141513	--	elapsed time: 6.339357
+pred run
+total_toss_dividiend: 10	--	threadCount: 4	--	pi: 3.141517	--	elapsed time: 3.318278pred run
+total_toss_dividiend: 10	--	threadCount: 8	--	pi: 3.141595	--	elapsed time: 1.875582
+pred run
+total_toss_dividiend: 10	--	threadCount: 16	--	pi: 3.141688	--	elapsed time: 1.251546
 
 
-processors: 1	--	pi: 3.141775	--	elapsed time:11.942708
-processors: 2	--	pi: 3.141978	--	elapsed time:6.411415
-processors: 4	--	pi: 3.142589	--	elapsed time:3.475153
-processors: 8	--	pi: 3.142997	--	elapsed time:2.018526
+pfor run
+toss_dividend: 10	--	threadCount: 1	--	pi: 3.141577	--	elapsed time: 12.117926
+pfor run
+toss_dividend: 10	--	threadCount: 2	--	pi: 3.141644	--	elapsed time: 6.189493
+pfor run
+toss_dividend: 10	--	threadCount: 4	--	pi: 3.141531	--	elapsed time: 3.278050
+pfor run
+toss_dividend: 10	--	threadCount: 8	--	pi: 3.141946	--	elapsed time: 1.830704
+pfor run
+toss_dividend: 10	--	threadCount: 16	--	pi: 3.141940	--	elapsed time: 1.249141

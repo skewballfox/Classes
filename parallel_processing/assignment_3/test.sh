@@ -1,13 +1,11 @@
-mpi_compile(){
-  output="$(basename $1)"
-  mpicc -O2 -std=c11 -o $output $1
-}
+#!/usr/bin/bash
 
-mpi_run(){
-mpirun -c 1 ./$1 $2 >> $3
-mpirun -c 2 ./$1 $2 >> $3
-mpirun -c 4 ./$1 $2 >> $3
-mpirun -c 8 ./$1 $2 >> $3
+omp_run(){
+./$1 1  $2 >> $3
+./$1 2  $2 >> $3
+./$1 4  $2 >> $3
+./$1 8  $2 >> $3
+./$1 16 $2 >> $3
 
 }
 
@@ -15,21 +13,26 @@ mpirun -c 8 ./$1 $2 >> $3
 
 ./serial_pi_estimator 100 >> n1_data.md 
 ./serial_pi_estimator 10 >> n2_data.md
-./serial_pi_estimator >> n3_data.md
+./serial_pi_estimator 1 >> n3_data.md
 
-echo -e "\n\nsingle point communicator output\n\n" >>n1_data.md
-echo -e "\n\nsingle point communicator output\n\n" >>n2_data.md
-echo -e "\n\nsingle point communicator output\n\n" >>n3_data.md
+echo serial portion complete
 
-mpi_run sp_mpi_pi_estimator 100 n1_data.md
-mpi_run sp_mpi_pi_estimator 10 n2_data.md
-mpi_run sp_mpi_pi_estimator 1 n3_data.md
+echo -e "\n\n" >> n1_data.md
+echo -e "\n\n" >> n2_data.md
+echo -e "\n\n" >> n3_data.md
 
-echo -e "\n\ncollective communication output\n\n" >>n1_data.md
-echo -e "\n\ncollective communication output\n\n" >>n2_data.md
-echo -e "\n\ncollective communication output\n\n" >>n3_data.md
+omp_run OpenMP_pred_pi_estimator 100 n1_data.md
+omp_run OpenMP_pred_pi_estimator 10 n2_data.md
+omp_run OpenMP_pred_pi_estimator 1 n3_data.md
 
-mpi_run cc_mpi_pi_estimator 100 n1_data.md
-mpi_run cc_mpi_pi_estimator 10 n2_data.md
-mpi_run cc_mpi_pi_estimator 1 n3_data.md
+echo program 1 portion complete
 
+echo -e "\n\n" >> n1_data.md
+echo -e "\n\n" >> n2_data.md
+echo -e "\n\n" >> n3_data.md
+
+
+omp_run OpenMP_pfor_pi_estimator 100 n1_data.md
+omp_run OpenMP_pfor_pi_estimator 10 n2_data.md
+omp_run OpenMP_pfor_pi_estimator 1 n3_data.md
+echo program 2 portion complete

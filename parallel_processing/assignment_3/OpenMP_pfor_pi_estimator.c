@@ -51,8 +51,8 @@ int main (int arg_count,char* arg_vector[])
     # endif
     long double pi=4*((long double)circle_count/(long double)(total_tosses));
                                                               //-((total_tosses%threadCount));
-    printf("circle count: %d\t--\ttotal_tosses: %d\t--\ttosses_per_thread: %d\t--\tthreadCount: %d\t--\tpi: %Lf\t--\t",circle_count,total_tosses,threadCount, pi);
-    printf("elapsed time: %lf",finish-start);
+    printf("pfor run\ntoss_dividend: %d\t--\tthreadCount: %d\t--\tpi: %Lf\t--\t",total_toss_dividend,threadCount, pi);
+    printf("elapsed time: %lf\n",finish-start);
     return 0;
 }
 
@@ -75,7 +75,7 @@ int toss_darts(int threadCount, int tosses)
     center.x=1;
     center.y=1;
     struct point dart_toss;
-    unsigned int my_seed=(unsigned)time(NULL);
+    unsigned int my_seed;
     const double ranged_div = (double)RAND_MAX/2.0;
     #pragma omp parallel for num_threads(threadCount) default(none) \
     shared(tosses,center,ranged_div) private(my_seed,dart_toss) \
@@ -88,3 +88,5 @@ int toss_darts(int threadCount, int tosses)
     }
     return circle_count;
 }
+
+

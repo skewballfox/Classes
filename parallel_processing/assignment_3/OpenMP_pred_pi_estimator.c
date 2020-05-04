@@ -9,7 +9,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
-#include <omp.h>
+#ifdef _OPENMP
+#   include <omp.h>
+#endif
 struct point{
     double x;
     double y;
@@ -32,16 +34,23 @@ int main (int arg_count,char* arg_vector[])
 
     //srand((unsigned)time(NULL));//initialize random seed
     //start timer
-    start=time(NULL);
-
+    #ifdef _OPENMP
+        start=omp_get_wtime();
+    #else
+        start=time(NULL);
+    #endif
+    
     //do the math
     circle_count=toss_darts(threadCount,tosses_per_thread);
     //get finishing time
-    finish=time(NULL);
-
+    #ifdef _OPENMP
+        finish=omp_get_wtime();
+    #else
+        finish=time(NULL);
+    #endif
     long double pi=4*((long double)circle_count/(long double)(total_tosses));
                                                               //-((total_tosses%threadCount));
-    printf("circle count: %d\t--\ttotal_tosses: %d\t--\ttosses_per_thread: %d\t--\tthreadCount: %d\t--\tpi: %Lf\t--\t",circle_count,total_tosses,tosses_per_thread,threadCount, pi);
+    printf("pred run\ntotal_toss_dividiend: %d\t--\tthreadCount: %d\t--\tpi: %Lf\t--\t",total_toss_dividend,threadCount, pi);
     printf("elapsed time: %lf",finish-start);
     return 0;
 }

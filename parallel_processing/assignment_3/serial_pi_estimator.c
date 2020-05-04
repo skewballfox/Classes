@@ -36,8 +36,8 @@ int main (int arg_count,char* arg_vector[])
     finish=time(NULL);
 
     long double pi=4*((long double)circle_count/(long double)total_tosses);
-    printf("serial\t--\tpi: %Lf\t--\t", pi);
-    printf("elapsed time: %lf",finish-start);
+    printf("serial\ntoss_dividend\t--\tpi: %Lf\t--\t",total_toss_dividend, pi);
+    printf("elapsed time: %lf\n",finish-start);
     return 0;
 }
 
